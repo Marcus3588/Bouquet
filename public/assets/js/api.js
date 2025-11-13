@@ -1,0 +1,1 @@
+// API communication  (fetch products/orders)

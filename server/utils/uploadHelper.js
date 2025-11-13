@@ -1,0 +1,2 @@
+
+// Handle image uploads
