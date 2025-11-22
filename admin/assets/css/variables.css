@@ -1,1 +1,61 @@
 /*Admin color pallete(consistet theme) */
+:root {
+  /* ===== BRAND CORE ===== */
+  --brand-pink: #ff4d94;
+  --brand-rose: #b30059;
+  --brand-light: #ffe6eb;   
+  --brand-bg: #fff8fa;
+
+  /* ===== NEUTRAL DASH COLORS ===== */
+  --dash-bg: #f8f9fb;
+  --dash-surface: #ffffff;
+  --dash-border: #e0e3e7;
+  --dash-hover: #f1f3f5;
+  --dash-shadow: rgba(0, 0, 0, 0.05);
+
+  /* ===== TEXT ===== */
+  --text-primary: #222;
+  --text-secondary: #555;
+  --text-muted: #888;
+  --text-inverse: #fff;
+
+  /* ===== SIDEBAR ===== */
+  --sidebar-bg: #b30059;      
+  --sidebar-text: #fff;
+  --sidebar-hover: #ff4d94;
+  --sidebar-active: #ff99c2;
+
+  /* ===== BUTTONS ===== */
+  --btn-primary-bg: var(--brand-pink);
+  --btn-primary-hover: #e63e84;
+  --btn-secondary-bg: #fff;
+  --btn-secondary-border: var(--brand-pink);
+  --btn-secondary-hover: #fff0f6;
+
+  /* ===== CARDS & PANELS ===== */
+  --card-bg: #fff;
+  --card-border: #f0f0f0;
+
+  --card-shadow: rgba(0, 0, 0, 0.04);
+
+  /* ===== STATUS COLORS ===== */
+  --status-success: #22c55e;
+  --status-warning: #facc15;
+  --status-danger: #ef4444;
+  --status-info: #3b82f6;
+
+  /* ===== CHART COLORS ===== */
+  --chart-pink: #ff99c2;
+  --chart-rose: #ff4d94;
+  --chart-violet: #c084fc;
+  --chart-blue: #60a5fa;
+  --chart-green: #86efac;
+
+  /* shadows an and radus */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.08);
+   --shadow-lg: 0 10px 20px rgba(0,0,0,0.1);
+   --radius-sm: 4px;
+   --radius-md: 8px;
+   --radius-lg: 12px;
+}

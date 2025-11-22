@@ -1,1 +1,784 @@
 /*Main dashboard styling */
+
+@import url('variables.css');
+
+html {
+    font-size: 14px;
+}
+
+body{
+    width: 100vw;
+    height: 100vh;
+    font-family: poppins, sans-serif;
+    font-size: 0.88rem;
+    background:var(--brand-light);
+    user-select: none;
+    overflow-y:scroll;
+    overflow-x: hidden;
+}
+
+body ::-webkit-scrollbar {
+    width: 0;
+}
+a{
+    color: var(--text-primary);
+}
+img {
+    display: block;
+    width: 100%;
+}
+
+h1{
+    font-weight: 800;
+    font-size: 1.8rem;
+}
+h2{
+    font-size: 1.4rem;
+    margin-top: 3rem;
+}
+h3{
+    font-size: 0.87rem;
+}
+
+.profile-photo{
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.text-muted{
+    color:var(--text-muted)
+}
+
+p{
+    color:var(--text-primary)
+}
+
+.container{
+    display: grid;
+    width: 96%;
+    margin: auto;
+    gap: 1.8rem;
+    grid-template-columns: 14rem auto 23rem;
+}
+
+b{
+    color:var(--text-primary)
+}
+.primary{
+    color:var(--text-primary)
+
+}
+
+.brand-pink{
+    color: var(--brand-pink);
+}
+.brand-rose{
+    color: var(--brand-rose);
+}
+.brand-light{
+    color: var(--brand-light);
+}
+.brand-bg{
+    color: var(--brand-bg);
+}
+
+.container{
+    display: grid;
+    width: 96%;
+    margin: auto;
+    gap: 1.8rem;
+    grid-template-columns: 14rem auto 23rem;
+    height: 100vh;
+    overflow: hidden;
+}
+
+
+
+/* Side bar */
+
+aside{
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar{
+    height: 100vh;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 2rem;
+}
+
+.sidebar a:hover{
+    color: var(--sidebar-hover);
+}
+
+
+.sidebar::-webkit-scrollbar {
+    width: 0;
+     background: transparent;
+}
+
+aside .sidebar a{
+    display: flex;
+    align-items: center;
+    color: var(--text-primary);
+    margin-left: 2rem;
+    gap:1rem;
+    height: 3.7rem;
+    transition: 300ms;
+    text-decoration: none;
+}
+
+.sidebar a.active {
+    background: var(--sidebar-active);
+    color: var(--brand-pink);
+    margin-left: 0;
+}
+
+aside .sidebar a.active:before{
+    content:"";
+    width: 6px;
+    height: 100%;
+    background-color: var(--sidebar-bg);
+    left: 0;
+}
+
+aside .sidebar a span{
+    scroll-behavior: smooth;
+    font-size: 1.6rem;
+    transition: all 300ms ease;
+}
+.sidebar a:hover span {
+    margin-left: 1rem;
+    color: var(--sidebar-hover);
+}
+
+aside .sidebar .message-count {
+    background: var(--status-danger);
+    color: var(--sidebar-text);
+    padding: 2px 1px;
+    font-size: 11px;
+    border-radius: var(--radius-sm);
+}
+
+.sidebar a:last-of-type {
+    margin-top: auto;
+}
+
+
+
+
+
+/* Main Dashboard */
+
+main {
+    overflow-y: auto;
+    height: 100vh;
+    padding-right: 1rem;
+}
+
+.date{
+    display: inline-block;
+    background: var(--brand-light);
+    margin-top: 1rem;
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 1.6rem;
+}
+
+.date input[type="date"]{
+    background: none;
+    color:var(--text-secondary) ;
+}
+
+.insights{
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 160px;
+    height: 240px;
+    padding: 1.7rem 1.4rem;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-md) ;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.1);
+}
+
+.top-row {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.top-row h3{
+    font-size: 1rem;
+    margin: 0;
+}
+
+.amount{
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 1rem 0;
+}
+
+.progress{
+    position: relative;
+    width: 90px;
+    height: 90px;
+    margin-bottom: 1rem;
+}
+
+.progress svg{
+    width: 90px;
+    height: 90px;
+}
+
+.progress circle{
+    stroke: #4169e1;
+    stroke-width: 8;
+    fill: none;
+    stroke-dasharray: 226;
+    stroke-dashoffset: 26;
+    font-size: 1rem;
+
+}
+
+.progress .number {
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+aside .top{
+    display: flex;
+    text-align: center;
+    justify-content:space-between;
+    margin-top: 1.4rem;
+}
+
+aside .close{
+    display: none;
+}
+
+aside h3{
+    font-weight: 500;
+}
+
+aside .logo {
+    display: flex;
+    gap: 0.8rem;
+}
+
+aside .logo img {
+    width: 10rem;
+    height: 7rem;
+    background-color: var(--brand-light);
+}
+
+
+aside .sidebar a :last-child {
+    bottom: 2rem;
+    width: 100%;
+}
+
+
+aside .sidebar a.active:before{
+    content:"";
+    width: 6px;
+    height: 100%;
+    background-color: var(--sidebar-bg);
+}
+
+aside .sidebar a.active span{
+    color: var(--sidebar-hover);
+    margin-left: calc(1rem-3px);
+}
+
+
+aside .sidebar a:hover span{
+    margin-left: 1rem;
+}
+
+
+
+
+
+.text-muted {
+    color: #777;
+    font-size: .9rem;
+}
+
+
+.card .top-row svg{
+    background-color:var(--brand-light);
+    padding: 0.5rem;
+    border-radius: 50%;
+}
+
+
+
+
+
+
+/* Table for recent order*/
+.recent-order{
+    margin-top: 2rem;
+    max-width: 600px;
+}
+
+.recent-order h2 {
+    margin-bottom: 0.8rem;
+}
+
+.recent-order table{
+    background-color: var(--dash-bg);
+    width: 100%;
+    border-radius: 15px;
+    padding: 0.8rem;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: all 300ms ease;
+}
+
+.recent-order table:hover{
+    box-shadow: none;
+}
+
+table tbody td {
+    height: 2.8rem;
+    border-bottom: 1px solid var(--brand-light);
+    color: var(--text-secondary);
+}
+
+table tbody td:last-child{
+    border: none;
+}
+
+.recent-order a{
+    text-align: center;
+    display: block;
+    margin: 1rem;
+    color: var(--status-info);
+}
+
+
+.warning{
+    color: var(--status-warning);
+}
+
+.detail{
+    color: var(--status-info);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* LAYOUT WRAPPER */
+.right {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 0 1rem;
+    margin-top: 1.5rem;
+}
+
+/* TOP BAR */
+.right__top {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 2rem;
+
+    position: sticky;
+    top: 0;
+    z-index: 20;
+
+    background: var(--brand-light);
+    padding: 0.5rem 0;
+}
+
+.right__top button {
+    display: none;
+}
+
+/* THEME TOGGLE */
+.theme-toggle {
+    background: var(--brand-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.2rem;
+    height: 2.4rem;
+
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+
+.theme-toggle__option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.theme-toggle__option.active {
+    background: var(--btn-primary-bg);
+    color: #fff;
+    border-radius: var(--radius-sm);
+}
+
+/* PROFILE */
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile__photo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* SCROLLABLE SIDE */
+.right__scroll {
+    overflow-y: auto;
+    margin-top: 1rem;
+    padding-right: 6px;
+}
+
+.right__scroll::-webkit-scrollbar {
+    width: 5px;
+}
+
+.right__scroll::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+}
+
+/* SECTION HEADINGS */
+.section-title {
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+}
+
+/* RECENT UPDATES */
+.updates-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.update-item {
+    display: grid;
+    grid-template-columns: 2.6rem auto;
+    gap: 1rem;
+
+    padding: 0.6rem;
+    background: var(--dash-bg);
+    border-radius: 15px;
+    box-shadow: var(--shadow-md);
+}
+
+.update-item__photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* SALES ANALYTICS */
+.analytics-list {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.analytics-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    padding: 1.3rem;
+    background: #fff;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+
+    transition: 0.2s ease;
+}
+
+.analytics-item:hover {
+    box-shadow: none;
+}
+
+.analytics-item__icon {
+    padding: 0.6rem;
+    border-radius: 50%;
+    background: var(--brand-light);
+}
+
+.analytics-item__info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* ADD PRODUCT */
+.analytics-add {
+    padding: 1.3rem;
+    background: transparent;
+    color: #60affa;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    cursor: pointer;
+    border: 2px dashed var(--chart-blue);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.analytics-add div{
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.analytics-add div h3{
+    font-weight: 600;
+}
+ 
+.analytics-add svg{
+    margin-top: 1rem;
+    
+}
+
+.analytics-item__icon{
+    background-color: var(--chart-blue);
+    
+}
+
+
+.success {
+    color: var(--status-success);
+}
+
+.danger {
+    color: var(--status-danger);
+}
+
+
+
+
+
+
+
+
+/* MEDIA QUERIES */
+/* ---------------------------------------
+   BASE BREAKPOINTS
+---------------------------------------- */
+
+/* Tablet (1024px and below) */
+@media (max-width: 1024px) {
+
+    /* GRID ADJUSTMENT */
+    .container {
+        grid-template-columns: 6rem auto; /* collapse sidebar */
+        gap: 1rem;
+    }
+
+    /* SIDEBAR COLLAPSED (ICONS ONLY) */
+    aside {
+        width: 6rem;
+        overflow: visible;
+    }
+
+    aside .logo img {
+        width: 4rem;
+        height: 3rem;
+    }
+
+    aside .sidebar a {
+        justify-content: center;
+        margin-left: 0;
+    }
+
+    aside .sidebar a h3 {
+        display: none; /* hide labels */
+    }
+
+    aside .sidebar a span {
+        margin-left: 0 !important;
+    }
+
+    /* REDUCE RIGHT COLUMN WIDTH */
+    .right {
+        padding-left: 1rem;
+    }
+
+    /* INSIGHTS CARDS — RESPONSIVE GRID */
+    .insights {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    /* TABLE WIDTH FIX */
+    table {
+        font-size: 0.9rem;
+    }
+}
+
+/* ---------------------------------------
+   MOBILE BREAKPOINT (768px)
+---------------------------------------- */
+
+@media (max-width: 768px) {
+
+    /* ONE COLUMN LAYOUT */
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    /* SIDE BAR BECOMES OVERLAY */
+    aside {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        width: 16rem;
+        height: 100vh;
+        background: var(--sidebar-bg);
+        z-index: 1000;
+        transition: left 0.3s ease;
+        padding-top: 1rem;
+    }
+
+    /* ADD THIS CLASS VIA JS WHEN MENU ICON IS CLICKED */
+    aside.open {
+        left: 0;
+    }
+
+    /* SHOW CLOSE BUTTON */
+    aside .close {
+        display: block;
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+        cursor: pointer;
+    }
+
+    /* MAIN CONTENT PADDING */
+    main {
+        padding: 1rem;
+        overflow-x: hidden;
+    }
+
+    /* INSIGHTS CARDS STACK PERFECTLY */
+    .insights {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        width: 100%;
+    }
+
+    /* RIGHT PANEL DROPS UNDER MAIN */
+    .right {
+        margin-top: 2rem;
+    }
+
+    /* ORDER TABLE SCROLLABLE */
+    .recent-orders table {
+        width: 700px; /* fixed so container scrolls */
+    }
+
+    .recent-orders {
+        overflow-x: auto;
+    }
+
+    /* PROFILE WIDGET SHRINK */
+    .top-right {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+}
+
+/* ---------------------------------------
+   SMALL PHONES (480px)
+---------------------------------------- */
+
+@media (max-width: 480px) {
+
+    h1 {
+        font-size: 1.4rem;
+    }
+
+    .date {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .card {
+        padding: 1.2rem;
+    }
+
+    .progress {
+        width: 70px;
+        height: 70px;
+    }
+
+    .progress svg {
+        width: 70px;
+        height: 70px;
+    }
+
+    /* Reduce Update Cards */
+    .updates .update {
+        padding: 0.6rem;
+    }
+}
