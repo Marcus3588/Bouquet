@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Val's Pack Admin Dashboard</title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fleur+De+Leah&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/try.css">
+
+	<style>
+		.main-header {
+			position: sticky;
+			top: 0;
+			background: var(--brand-light);
+			z-index: 99;
+			padding: 1.5rem 2rem;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin: -2rem -2rem 2rem -2rem;
+			border-bottom: 1px solid rgba(255,51,133,0.12);
+			backdrop-filter: blur(12px);
+		}
+		.main-header h1 { margin: 0; font-size: 2rem; font-weight: 800; }
+		    .logo { width: 58px; height: 58px; background: linear-gradient(135deg, #ff3385, #ff66b2); color: white; font-size: 40px; font-weight: bold; border-radius: 20px; display: grid; place-items: center; margin: 0 auto 2.8rem; box-shadow: 0 12px 35px rgba(255,51,133,0.28); position: sticky; top: 0; z-index: 2;}
+
+		/* GORGEOUS ANIMATED PROGRESS CIRCLES */
+		.progress svg { width: 90px; height: 90px; transform: rotate(-90deg); }
+		.progress .bg-circle   { fill: none; stroke: #f5e8ff; stroke-width: 8; }
+		.progress .fill-circle { fill: none; stroke: #ff3385; stroke-width: 8; stroke-linecap: round;
+		                        stroke-dasharray: 226; stroke-dashoffset: 226; transition: stroke-dashoffset 1.8s cubic-bezier(0.4,0,0.2,1); }
+		.progress .number { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+		                    font-weight: 800; font-size: 1.4rem; color: #ff3385; }
+
+		/* SHOW ALL BUTTON STYLE */
+		#toggleTable { 
+			background: linear-gradient(135deg,#ff3385,#ff66aa); color: white; padding: 0.9rem 2.2rem; 
+			border-radius: 50px; text-decoration: none; font-weight: 600; display: inline-block; margin-top: 1.5rem;
+			box-shadow: 0 10px 30px rgba(255,51,133,0.35); transition: all 0.3s;
+		}
+		#toggleTable:hover { background: #ff3385; transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255,51,133,0.5); }
+		.table-limited { max-height: 380px; overflow: hidden; transition: max-height 0.9s ease; }
+		.table-limited.expanded { max-height: 5000px; }
+	</style>
+</head>
+<body>
+
+<div class="container">
+	<aside>
+		<div class="top">
+			<div class="logo">
+				V
+			</div>
+			<div class="close" id="close-btn">
+				<span class="material-icons-sharp">close</span>
+			</div>
+		</div>
+
+		<div class="sidebar">
+			<a href="index.html" class="active">
+				<span class="material-icons-sharp">grid_view</span>
+				<h3>Dashboard</h3>
+			</a>
+			<a href="customer.html">
+				<span class="material-icons-sharp">person_outline</span>
+				<h3>Customers</h3>
+			</a>
+			<a href="orders.html">
+				<span class="material-icons-sharp">receipt_long</span>
+				<h3>Orders</h3>
+			</a>
+			<a href="analytics.html">
+				<span class="material-icons-sharp">insights</span>
+				<h3>Analytics</h3>
+			</a>
+			<a href="messages.html">
+				<span class="material-icons-sharp">mail_outline</span>
+				<h3>Messages</h3>
+				<span class="message-count">26</span>
+			</a>
+			<a href="products.html">
+				<span class="material-icons-sharp">inventory_2</span>
+				<h3>Products</h3>
+			</a>
+			<a href="report.html">
+				<span class="material-icons-sharp">report_gmailerrorred</span>
+				<h3>Reports</h3>
+			</a>
+			<a href="settings.html">
+				<span class="material-icons-sharp">settings</span>
+				<h3>Settings</h3>
+			</a>
+			<a href="add-product.html">
+				<span class="material-icons-sharp">add_circle</span>
+				<h3>Add Products</h3>
+			</a>
+			<a href="#" onclick="if(confirm('Queen, logout?'))window.location='login.html'">
+				<span class="material-icons-sharp">logout</span>
+				<h3>Logout</h3>
+			</a>
+		</div>
+	</aside>
+
+	<main>
+		<!-- STICKY HEADER — FINALLY PERFECT -->
+		<div class="main-header">
+			<h1>Dashboard</h1>
+			<div class="date">
+				<input type="date" id="dateFilter">
+			</div>
+		</div>
+
+		<!-- INSIGHTS CARDS  -->
+		<div class="insights">
+
+  <div class="insight-card wide">
+    <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ff66aa"><path d="M120-120v-80l80-80v160h-80Zm160 0v-240l80-80v320h-80Zm160 0v-320l80 81v239h-80Zm160 0v-239l80-80v319h-80Zm160 0v-400l80-80v480h-80ZM120-327v-113l280-280 160 160 280-280v113L560-447 400-607 120-327Z"/></svg></div>
+    <div class="info">
+      <h3>Total Sales</h3>
+      <h1 id="totalSales">$0</h1>
+      <p>Last 24 hours</p>
+    </div>
+    <div class="ring">
+      <svg><circle class="bg"></circle><circle class="fill"></circle></svg>
+      <div class="percent" id="salesPercent">0%</div>
+    </div>
+  </div>
+
+  <div class="insight-card">
+    <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ff66aa"><path d="M80-120v-80h800v80H80Zm40-120v-280h120v280H120Zm200 0v-480h120v480H320Zm200 0v-360h120v360H520Zm200 0v-600h120v600H720Z"/></svg></div>
+    <div class="info">
+      <h3>Total Expenses</h3>
+      <h1>$23,001</h1>
+      <p>Last 24 hours</p>
+    </div>
+    <div class="ring">
+      <svg><circle class="bg"></circle><circle class="fill"></circle></svg>
+      <div class="percent">67%</div>
+    </div>
+  </div>
+
+  <div class="insight-card">
+    <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ff66aa"><path d="M60-160v-320h120v320H60Zm240 0v-420h120v420H300Zm240 0v-520h120v520H540Zm240 0v-640h120v640H780Z"/></svg></div>
+    <div class="info">
+      <h3>Total Income</h3>
+      <h1 id="netIncome">$0</h1>
+      <p>Last 24 hours</p>
+    </div>
+    <div class="ring">
+      <svg><circle class="bg"></circle><circle class="fill"></circle></svg>
+      <div class="percent" id="incomePercent">0%</div>
+    </div>
+  </div>
+
+</div>
+
+		<!-- RECENT ORDERS -->
+		<div class="recent-orders-card">
+  <div class="roc-header">
+    <h2>Recent Orders</h2>
+    <button id="toggleTable" class="view-btn">Show All</button>
+  </div>
+
+  <div id="tableContainer" class="roc-table-wrapper">
+    <table id="ordersTable" class="roc-table">
+      <thead>
+        <tr>
+          <th data-col="product">Product</th>
+          <th data-col="number">Order #</th>
+          <th data-col="payment">Payment</th>
+          <th data-col="status">Status</th>
+          <th data-col="action">Action</th>
+        </tr>
+      </thead>
+      <tbody id="recentOrdersBody"></tbody>
+    </table>
+  </div>
+</div>
+	</main>
+
+	<!-- RIGHT COLUMN -->
+	<div class="right">
+		<div class="right__top">
+			<button id="menu-button">
+				<span class="material-icons-sharp">menu</span>
+			</button>
+
+			<div class="theme-toggle">
+				<span class="theme-toggle__option active"><span class="material-icons-sharp">light_mode</span></span>
+				<span class="theme-toggle__option"><span class="material-icons-sharp">dark_mode</span></span>
+			</div>
+
+			<div class="profile" id="profileTrigger">
+				<div class="profile__info">
+					<p>Hey, <b id="adminName">Irish</b></p>
+					<small class="text-muted">Admin</small>
+				</div>
+				<div class="profile__photo">
+					<img id="adminPhoto" src="./assets/product/image/profile.jpg" alt="Admin">
+				</div>
+			</div>
+
+			<div class="profile-dropdown" id="profileDropdown">
+				<div class="dropdown-header">
+					<img id="dropdownPhoto" src="./assets/product/image/profile.jpg" alt="Admin">
+					<div>
+						<h4 id="dropdownName">Irish Val</h4>
+						<p id="dropdownEmail">irish@valspack.com</p>
+					</div>
+				</div>
+				<div class="dropdown-links">
+					<a href="profile.html"><span class="material-icons-sharp">account_circle</span>My Profile</a>
+					<a href="settings.html"><span class="material-icons-sharp">settings</span>Settings</a>
+					<hr>
+					<a href="#" id="logoutBtn" style="color:#e74c3c;"><span class="material-icons-sharp">logout</span>Logout</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="right__scroll">
+			<section class="recent-updates clickable-section" onclick="window.location.href='activity.html'">
+				<h2 class="section-title" style="cursor:pointer;color:var(--brand-pink);">Recent Updates</h2>
+				<div class="updates-list" id="updatesList">
+					<p style="text-align:center;color:#999;padding:1rem;">Loading system activity...</p>
+				</div>
+			</section>
+
+			<section class="sales-analytics">
+				<h2 class="section-title">Sales Analytics <small id="todayDate" style="color:#ff66aa;font-weight:600;"></small></h2>
+				<div class="analytics-list">
+
+					<div class="analytics-item clickable" onclick="window.location.href='orders.html?type=online'">
+						<div class="analytics-item__icon">
+							<svg viewBox="0 -960 960 960" fill="#ffff"><path d="m480-560-56-56 63-64H320v-80h167l-64-64 57-56 160 160-160 160ZM280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM40-800v-80h131l170 360h280l156-280h91L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68.5-39t-1.5-79l54-98-144-304H40Z"/></svg>
+						</div>
+						<div class="analytics-item__info">
+							<div>
+								<h3>ONLINE ORDERS</h3>
+								<small class="text-muted">Click to view all online orders</small>
+							</div>
+							<h5 class="success" id="onlineGrowth">+0%</h5>
+							<h3 id="onlineCount">0</h3>
+						</div>
+					</div>
+
+					<div class="analytics-item clickable" onclick="window.location.href='orders.html?type=offline'">
+						<div class="analytics-item__icon">
+							<svg viewBox="0 -960 960 960" fill="#e3e3e3"><path d="M240-80q-33 0-56.5-23.5T160-160v-480q0-33 23.5-56.5T240-720h80q0-66 47-113t113-47q66 0 113 47t47 113h80q33 0 56.5 23.5T800-640v480q0 33-23.5 56.5T720-80H240Zm0-80h480v-480h-80v80q0 17-11.5 28.5T600-520q-17 0-28.5-11.5T560-560v-80H400v80q0 17-11.5 28.5T360-520q-17 0-28.5-11.5T320-560v-80h-80v480Zm160-560h160q0-33-23.5-56.5T480-800q-33 0-56.5 23.5T400-720ZM240-160v-480 480Z"/></svg>
+						</div>
+						<div class="analytics-item__info">
+							<div>
+								<h3>OFFLINE ORDERS</h3>
+								<small class="text-muted">Click to view all walk-ins</small>
+							</div>
+							<h5 class="danger" id="offlineGrowth">0%</h5>
+							<h3 id="offlineCount">0</h3>
+						</div>
+					</div>
+
+					<div class="analytics-item clickable" onclick="window.location.href='customers.html'">
+						<div class="analytics-item__icon">
+							<svg viewBox="0 -960 960 960" fill="#ffff"><path d="m520-260 140-140q11-11 17.5-26t6.5-32q0-34-24-58t-58-24q-19 0-37.5 11T520-492q-30-28-47-38t-35-10q-34 0-58 24t-24 58q0 17 6.5 32t17.5 26l140 140Zm336-130L570-104q-12 12-27 18t-30 6q-15 0-30-6t-27-18L103-457q-11-11-17-25.5T80-513v-287q0-33 23.5-56.5T160-880h287q16 0 31 6.5t26 17.5l352 353q12 12 17.5 27t5.5 30q0 15-5.5 29.5T856-390ZM513-160l286-286-353-354H160v286l353 354ZM260-640q25 0 42.5-17.5T320-700q0-25-17.5-42.5T260-760q-25 0-42.5 17.5T200-700q0 25 17.5 42.5T260-640Zm220 160Z"/></svg>
+						</div>
+						<div class="analytics-item__info">
+							<div>
+								<h3>NEW CUSTOMERS</h3>
+								<small class="text-muted">Click to view all customers</small>
+							</div>
+							<h5 class="success" id="newCustomerGrowth">+0%</h5>
+							<h3 id="newCustomerCount">0</h3>
+						</div>
+					</div>
+
+					<div class="analytics-add" onclick="window.location.href='add-product.html'">
+						<svg viewBox="0 -960 960 960"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+						<h3>Add New Flower</h3>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+</div>
+
+<script>
+// TODAY DATE
+document.getElementById('dateFilter').valueAsDate = new Date();
+document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'short'});
+
+// ADMIN PROFILE FROM localStorage
+const profile = JSON.parse(localStorage.getItem('valspack_admin_profile') || '{}');
+if(profile.name) document.getElementById('adminName').textContent = profile.name;
+if(profile.fullName) document.getElementById('dropdownName').textContent = profile.fullName || profile.name + ' Val';
+if(profile.email) document.getElementById('dropdownEmail').textContent = profile.email;
+if(profile.photo){
+	document.getElementById('adminPhoto').src = profile.photo;
+	document.getElementById('dropdownPhoto').src = profile.photo;
+}
+
+// PROFILE DROPDOWN
+document.getElementById('profileTrigger').addEventListener('click', e=>{
+	e.stopPropagation();
+	document.getElementById('profileDropdown').classList.toggle('show');
+});
+document.addEventListener('click', ()=>document.getElementById('profileDropdown').classList.remove('show'));
+document.getElementById('profileDropdown').addEventListener('click', e=>e.stopPropagation());
+
+// LOGOUT
+document.getElementById('logoutBtn').addEventListener('click', e=>{
+	e.preventDefault();
+	if(confirm('Queen, are you sure you want to logout?')){
+		localStorage.removeItem('valspack_admin_profile');
+		window.location='login.html';
+	}
+});
+
+// UPDATE CARDS WITH REAL DATA + ANIMATION
+function updateCards(){
+	const orders = JSON.parse(localStorage.getItem('valspack_orders') || '[]');
+	const today = new Date().toISOString().slice(0,10);
+	const sales = orders.filter(o=>o.date===today).reduce((a,o)=>a+(o.total||0),0);
+	const income = Math.max(0, sales - 23001);
+
+	document.getElementById('totalSales').textContent = '$' + sales.toLocaleString();
+	document.getElementById('netIncome').textContent = '$' + income.toLocaleString();
+
+	animateCircle('salesPercent', sales>=50000?94:sales>=20000?78:sales>=5000?52:28);
+	animateCircle('incomePercent', income>=20000?89:income>=9000?68:income>=2000?42:18);
+}
+function animateCircle(id, percent){
+	document.getElementById(id).textContent = percent;
+	const circle = document.getElementById(id).closest('.progress').querySelector('.fill-circle');
+	circle.style.strokeDashoffset = 226 - (226 * percent / 100);
+}
+
+// RECENT ORDERS TABLE
+let expanded = false;
+document.getElementById('toggleTable').addEventListener('click', e=>{
+	e.preventDefault();
+	expanded = !expanded;
+	document.getElementById('tableContainer').classList.toggle('expanded');
+	e.target.textContent = expanded ? 'Show Less' : 'Show All Orders';
+	loadTable();
+});
+
+function loadTable(){
+	const orders = JSON.parse(localStorage.getItem('valspack_orders') || '[]').slice().reverse();
+	const tbody = document.getElementById('recentOrdersBody');
+	const show = expanded ? orders : orders.slice(0,6);
+	tbody.innerHTML = show.length ? show.map(o=>`
+		<tr>
+			<td data-label="Product">${o.productName || 'Secret Bloom'}</td>
+			<td data-label="Order">#${o.id}</td>
+			<td data-label="Payment">${o.payment==='paid'?'Paid':'Pending'}</td>
+            <td data-label="Status">
+                <span class= "status-badge" ${o.status || 'pending'}
+                 ${o.status ? o.status : 'pending'}
+                 </span>
+			</td>
+			<td data-label="Action">
+                <a class="detail-link" onclick="location.href='orders.html?id=${o.id}'">Details</a>
+            </td>
+		</tr>
+	`).join('') : `
+    <tr><td colspan="5" style="text-align:center;padding:4rem;color:#ccc;">No orders yet</td></tr>
+    `;
+}
+
+// SIMPLE SORT
+function sortTable(n){
+	const table = document.getElementById('ordersTable');
+	const rows = Array.from(table.querySelectorAll('tbody tr'));
+	const dir = table.dataset.dir === 'asc' ? 'desc' : 'asc';
+	table.dataset.dir = dir;
+	rows.sort((a,b)=>{
+		let A = a.cells[n].textContent.trim();
+		let B = b.cells[n].textContent.trim();
+		if(n===1){ A=+A.replace('#',''); B=+B.replace('#',''); }
+		return (A>B?1:-1)*(dir==='asc'?1:-1);
+	});
+	rows.forEach(r=>table.querySelector('tbody').appendChild(r));
+}
+
+// ANALYTICS + RECENT UPDATES (your original code — working)
+function updateAnalyticsAndActivity(){
+	const orders = JSON.parse(localStorage.getItem('valspack_orders') || '[]');
+	const today = new Date().toISOString().slice(0,10);
+	const onlineToday = orders.filter(o=>o.date===today && o.type==='online').length;
+	const offlineToday = orders.filter(o=>o.date===today && o.type==='offline').length;
+
+	document.getElementById('onlineCount').textContent = onlineToday;
+	document.getElementById('offlineCount').textContent = offlineToday;
+
+	const recent = orders.slice(-5).reverse();
+	const list = document.getElementById('updatesList');
+	list.innerHTML = recent.length ? recent.map(o=>`
+		<div class="update-item">
+			<img class="update-item__photo" src="${o.customerPhoto || './assets/product/image/profile1.jpg'}" alt="">
+			<div class="update-item__content">
+				<p><b>${o.customerName}</b> ${o.type==='online'?'placed an online order':'ordered in-store'}</p>
+				<small class="text-muted">${timeAgo(o.date+' '+o.time)}</small>
+			</div>
+		</div>
+	`).join('') : '<p style="text-align:center;color:#999">No activity yet</p>';
+}
+function timeAgo(dateString){
+	const diff = (Date.now() - new Date(dateString))/1000;
+	if(diff<60) return Math.floor(diff)+'s ago';
+	if(diff<3600) return Math.floor(diff/60)+'m ago';
+	if(diff<86400) return Math.floor(diff/3600)+'h ago';
+	return Math.floor(diff/86400)+'d ago';
+}
+
+function animateCircle(id, percent){
+  document.getElementById(id).textContent = percent + "%";
+  const circle = document.getElementById(id).closest('.ring').querySelector('.fill');
+  const total = 214;
+  circle.style.strokeDashoffset = total - (total * percent / 100);
+}
+// RUN EVERYTHING
+updateCards();
+loadTable();
+updateAnalyticsAndActivity();
+setInterval(()=>{ updateCards(); loadTable(); updateAnalyticsAndActivity(); }, 15000);
+
+</script>
+</body>
+</html>

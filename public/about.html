@@ -1,1 +1,227 @@
 <!--About the brand-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - Val's Pack</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: 'Segoe UI', sans-serif; background:#fff5f8; color:#333; line-height:1.7; }
+
+    /* Hero */
+    .about-hero {
+      background: linear-gradient(rgba(255,102,178,0.12), rgba(255,255,255,0.95)),
+                  url('images/about-hero.jpg') center/cover no-repeat;
+      padding: 160px 20px 120px;
+      text-align: center;
+      position: relative;
+    }
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at center, transparent 0%, rgba(255,102,178,0.05) 100%);
+    }
+    .about-hero h1 {
+      font-size: 4.5rem;
+      background: linear-gradient(90deg, #ff3385, #ff66b2, #ff99cc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0 0 20px 0;
+      position: relative;
+      z-index: 2;
+    }
+    .about-hero p {
+      font-size: 1.4rem;
+      max-width: 800px;
+      margin: 0 auto;
+      color: #555;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Content Sections */
+    .about-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .story-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      margin: 100px 0;
+    }
+    .story-text h2 {
+      font-size: 3rem;
+      color: #ff3385;
+      margin-bottom: 30px;
+    }
+    .story-text p {
+      font-size: 1.2rem;
+      color: #555;
+    }
+    .story-image {
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 25px 70px rgba(255,102,178,0.2);
+    }
+    .story-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s;
+    }
+    .story-image:hover img { transform: scale(1.08); }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      margin: 120px 0;
+    }
+    .value-card {
+      background: white;
+      padding: 50px 30px;
+      border-radius: 32px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(255,102,178,0.12);
+      transition: all 0.4s;
+    }
+    .value-card:hover {
+      transform: translateY(-15px);
+      box-shadow: 0 30px 80px rgba(255,51,133,0.25);
+    }
+    .value-card i {
+      font-size: 3.5rem;
+      background: linear-gradient(135deg, #ff66b2, #ff3385);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+    .value-card h3 {
+      font-size: 1.8rem;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .team-cta {
+      text-align: center;
+      padding: 100px 20px;
+      background: linear-gradient(135deg, #ff3385, #ff66b2);
+      color: white;
+      border-radius: 40px;
+      margin: 100px 20px;
+    }
+    .team-cta h2 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    .team-cta p {
+      font-size: 1.4rem;
+      max-width: 800px;
+      margin: 0 auto 40px;
+    }
+    .cta-btn {
+      display: inline-block;
+      padding: 20px 50px;
+      background: white;
+      color: #ff3385;
+      border-radius: 50px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      transition: 0.4s;
+    }
+    .cta-btn:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .about-hero h1 { font-size: 3.5rem; }
+      .story-section { grid-template-columns: 1fr; gap: 50px; margin: 80px 0; }
+      .story-text h2 { font-size: 2.6rem; text-align: center; }
+    }
+    @media (max-width: 768px) {
+      .about-hero { padding: 120px 15px 90px; }
+      .about-hero h1 { font-size: 3rem; }
+      .about-hero p { font-size: 1.2rem; }
+      .story-text h2 { font-size: 2.3rem; }
+      .team-cta h2 { font-size: 2.5rem; }
+      .team-cta p { font-size: 1.2rem; }
+    }
+    @media (max-width: 480px) {
+      .about-hero h1 { font-size: 2.6rem; }
+      .story-image { border-radius: 24px; }
+      .value-card { padding: 40px 20px; }
+      .team-cta { padding: 80px 20px; margin: 80px 15px; border-radius: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <section class="about-hero">
+    <h1>Our Love Story</h1>
+    <p>Handcrafted bouquets made with passion, delivered with joy - every single day since started operation</p>
+  </section>
+
+  <div class="about-content">
+
+    <!-- Our Story -->
+    <div class="story-section">
+      <div class="story-text">
+        <h2>From One Valentine to Thousands</h2>
+        <p>It all started on Valentine's Day 2023 when I surprised my girlfriend with a bouquet I arranged myself. She cried happy tears - and so did her friends when they saw the photos.</p>
+        <p>Within weeks, friends of friends started asking: "Can you make one for me too?" That's when <strong>Val's Pack</strong> was born.</p>
+        <p>Today, we've delivered over 8,000 bouquets across Portland each one wrapped with the same love as that very first arrangement.</p>
+      </div>
+      <div class="story-image">
+        <img src="images/story.jpg" alt="Our first bouquet">
+      </div>
+    </div>
+
+    <!-- Our Values -->
+    <div class="values-grid">
+      <div class="value-card">
+        <i class="fas fa-heart"></i>
+        <h3>Made with Love</h3>
+        <p>Every bouquet is hand-arranged by our team who truly care</p>
+      </div>
+      <div class="value-card">
+        <i class="fas fa-leaf"></i>
+        <h3>Fresh Flowers Only</h3>
+        <p>Sourced daily from the best farms - never wilted, never old</p>
+      </div>
+      <div class="value-card">
+        <i class="fas fa-truck"></i>
+        <h3>Same-Day Delivery</h3>
+        <p>Order by 2 PM → delivered fresh the same day in Portland</p>
+      </div>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="team-cta">
+      <h2>Let's Create Magic Together</h2>
+      <p>Whether it's a grand gesture or a simple “thinking of you” - we're here to help you say it perfectly with flowers.</p>
+      <a href="shop.html" class="cta-btn">Shop Our Bouquets</a>
+    </div>
+
+  </div>
+
+  <!-- Cart count update -->
+  <script>
+    document.querySelectorAll('.cart-count').forEach(el => {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+      el.textContent = count;
+    });
+  </script>
+</body>
+</html>

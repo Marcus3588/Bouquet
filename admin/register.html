@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Val's Pack • Create Account</title>
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <style>
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { min-height:100vh; background:#fffaf8; font-family:'Poppins',sans-serif; display:grid; place-items:center; padding:1rem; }
+    .card { width:100%; max-width:420px; background:white; border-radius:24px; padding:3rem 2rem; box-shadow:0 20px 60px rgba(255,51,133,0.15); text-align:center; }
+    .logo { width:80px; height:80px; background:linear-gradient(135deg,#ff3385,#ff66b2); color:white; font-weight:900; font-size:42px; border-radius:22px; display:grid; place-items:center; margin:0 auto 2rem; }
+    h1 { font-size:28px; margin-bottom:0.5rem; color:#222; }
+    p { color:#666; margin-bottom:2rem; }
+    input { width:100%; padding:16px; margin:12px 0; border:2px solid #ffe6f5; border-radius:16px; font-size:16px; }
+    input:focus { outline:none; border-color:#ff66b2; }
+    button { width:100%; padding:16px; background:linear-gradient(135deg,#ff3385,#ff66b2); color:white; border:none; border-radius:16px; font-size:17px; font-weight:600; cursor:pointer; margin:20px 0 10px; }
+    button:hover { transform:translateY(-2px); }
+    .extra a { color:#ff66b2; text-decoration:none; font-weight:600; }
+  </style>
+</head>
+<script src="js/auth.js"></script>
+<body>
+  <div class="card">
+    <div class="logo">V</div>
+    <h1>Create Account</h1>
+    <p>Set up your admin access</p>
+
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="pass" placeholder="Password (8+ chars)" minlength="8" required>
+    <input type="password" id="confirm" placeholder="Confirm Password" required>
+
+    <button onclick="register()">Create Account</button>
+
+    <div class="extra">
+      Already have an account? <a href="login.html">Log in</a>
+    </div>
+  </div>
+
+<script>
+function register() {
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim().toLowerCase();
+  const pass = document.getElementById('pass').value;
+  const confirm = document.getElementById('confirm').value;
+
+  if (pass !== confirm) return alert("Passwords don't match");
+  if (pass.length < 8) return alert("Password must be 8+ characters");
+
+  const existing = localStorage.getItem('adminAccount');
+  if (existing && JSON.parse(existing).email === email) {
+    return alert("Email already registered");
+  }
+
+  const account = { name, email, password: pass };
+  localStorage.setItem('adminAccount', JSON.stringify(account));
+  localStorage.setItem('adminLoggedIn', 'true');
+
+  alert("Account created! Welcome, " + name.split(' ')[0] + "!");
+  window.location.href = 'index.html';
+}
+</script>
+</body>
+</html>

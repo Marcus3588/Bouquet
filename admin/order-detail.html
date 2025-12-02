@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Details • Val's Pack</title>
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+  <style>
+    main { padding: 2rem; max-width: 1000px; margin: 0 auto; }
+    .back-btn { color: #666; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; font-weight: 600; }
+    .page-title { font-size: 2.2rem; font-weight: 700; color: #222; margin-bottom: 1rem; }
+    .order-header { background: white; border-radius: 24px; padding: 2rem; box-shadow: 0 15px 40px rgba(255,51,133,0.12); border: 1px solid #ffe6f5; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .order-id { font-size: 2rem; font-weight: 800; color: var(--brand-pink); }
+    .actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn { padding: 1rem 2rem; border-radius: 16px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.8rem; transition: all 300ms; border: none; }
+    .btn-primary { background: var(--brand-pink); color: white; box-shadow: 0 10px 30px rgba(255,51,133,0.3); }
+    .btn-primary:hover { background: #ff3385; transform: translateY(-4px); }
+    .btn-success { background: #27ae60; color: white; }
+    .section { background: white; border-radius: 24px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 15px 40px rgba(255,51,133,0.12); border: 1px solid #ffe6f5; }
+    .section-title { font-size: 1.4rem; font-weight: 700; color: #222; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem; }
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .items-table { width: 100%; border-collapse: collapse; }
+    .items-table th, .items-table td { padding: 1rem; text-align: left; border bottoms: 1px solid #ffe6f5; }
+    .items-table th { background: #fff0f8; }
+    .total-row { font-size: 1.4rem; font-weight: 800; color: #222; text-align: right; padding: 1.5rem 0; }
+    @media (max-width: 768px) {
+      .order-header { flex-direction: column; align-items: flex-start; }
+      .actions { width: 100%; justify-content: stretch; }
+      .btn { flex: 1; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <main>
+      <a href="orders.html" class="back-btn">
+        <span class="material-symbols-sharp">arrow_back</span> Back to Orders
+      </a>
+
+      <div class="page-title">
+        <span class="material-symbols-sharp" style="font-size:2.6rem;color:var(--brand-pink)">receipt_long</span>
+        <h1>Order Details</h1>
+      </div>
+
+      <div class="order-header">
+        <div class="order-id" id="orderId">#ORD-048</div>
+        <div class="actions">
+          <select id="statusSelect" onchange="updateStatus()" style="padding:0.8rem 1.5rem;border-radius:16px;border:2px solid #f0e6f8;font-weight:600;">
+            <option value="pending">Pending</option>
+            <option value="processing">Processing</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <button class="btn btn-primary" onclick="printInvoice()">Print Invoice</button>
+          <button class="btn btn-success" onclick="sendWhatsApp()">WhatsApp Update</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="material-symbols-sharp">person</span> Customer & Delivery</div>
+        <div class="info-grid">
+          <div><strong>Customer:</strong> <span id="customerName">Chioma Okeke</span></div>
+          <div><strong>Phone:</strong> <span id="customerPhone">+234 812 345 6789</span></div>
+          <div><strong>Address:</strong> 12 Admiralty Way, Lekki Phase 1, Lagos</div>
+          <div><strong>Delivery:</strong> Nov 25, 2025 • 6:00 PM</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="material-symbols-sharp">shopping_bag</span> Order Items</div>
+        <table class="items-table">
+          <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
+          <tbody id="itemsBody"></tbody>
+        </table>
+        <div class="total-row">Grand Total: ₦<span id="grandTotal">130,000</span></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('id') || 'ORD-048';
+    const orders = JSON.parse(localStorage.getItem('valspack_orders')) || [];
+    const order = orders.find(o => o.id === orderId) || orders[0];
+
+    document.getElementById('orderId').textContent = `#${order.id}`;
+    document.getElementById('customerName').textContent = order.customer;
+    document.getElementById('customerPhone').textContent = order.phone;
+    document.getElementById('statusSelect').value = order.status;
+
+    // Sample items
+    const sampleItems = [
+      { name: "Classic Red Rose Bouquet", qty: 1, price: 45000 },
+      { name: "Luxury Pink Tulip Box", qty: 1, price: 68000 },
+      { name: "Custom Card Message", qty: 1, price: 12000 }
+    ];
+
+    document.getElementById('itemsBody').innerHTML = sampleItems.map(item => `
+      <tr>
+        <td>${item.name}</td>
+        <td>${item.qty}</td>
+        <td>₦${item.price.toLocaleString()}</td>
+        <td style="color:var(--brand-pink);font-weight:700;">₦${(item.qty * item.price).toLocaleString()}</td>
+      </tr>
+    `).join('');
+
+    document.getElementById('grandTotal').textContent = order.total.toLocaleString();
+
+    function updateStatus() {
+      const newStatus = document.getElementById('statusSelect').value;
+      const updated = orders.map(o => o.id === order.id ? {...o, status: newStatus} : o);
+      localStorage.setItem('valspack_orders', JSON.stringify(updated));
+      alert(`Status updated to ${newStatus.toUpperCase()}!`);
+    }
+
+    function printInvoice() { window.print(); }
+    function sendWhatsApp() {
+      const phone = order.phone.replace(/\D/g, '');
+      const msg = `Hello ${order.customer}! Your Val's Pack order #${order.id} is now ${document.getElementById('statusSelect').value}. Delivery by 6PM tomorrow. Thank you!`;
+      window.open(`https://wa.me/234${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Product • Val's Pack Admin</title>
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+
+  <style>
+    main{padding:2rem;max-width:900px;margin:0 auto}
+    .page-title{font-size:2rem;color:var(--text-primary);margin-bottom:2rem;display:flex;align-items:center;gap:1rem}
+    .form-container{background:white;border-radius:24px;padding:2.5rem;box-shadow:0 15px 40px rgba(255,51,133,.12)}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.8rem;margin-bottom:2rem}
+    .form-group{display:flex;flex-direction:column}
+    .form-group.full{grid-column:1/-1}
+    label{font-weight:600;color:#333;margin-bottom:.6rem;font-size:1.05rem}
+    input,textarea,select{padding:1rem 1.2rem;border:2px solid #f0e6f8;border-radius:14px;font-size:1rem;background:#fff;transition:all 300ms;font-family:inherit}
+    input:focus,textarea:focus,select:focus{outline:none;border-color:var(--brand-pink);box-shadow:0 0 0 4px rgba(255,51,133,.15)}
+    textarea{min-height:120px;resize:vertical}
+    .image-upload{border:3px dashed #ffcce6;border-radius:18px;padding:3rem 1rem;text-align:center;background:#fff5fb;cursor:pointer;transition:all 300ms}
+    .image-upload:hover{border-color:var(--brand-pink);background:#fff0f8}
+    .image-upload.dragover{border-color:var(--brand-pink);background:#ffe6f5}
+    .upload-icon{font-size:4rem;color:#ff99cc;margin-bottom:1rem}
+    .preview-img{max-width:100%;max-height:300px;border-radius:14px;margin-top:1rem;box-shadow:0 10px 30px rgba(0,0,0,.1)}
+    .btn-group{display:flex;gap:1.2rem;margin-top:2rem;flex-wrap:wrap}
+    .btn{padding:1rem 2.5rem;border-radius:14px;font-weight:600;font-size:1.1rem;cursor:pointer;transition:all 300ms;border:none;flex:1;min-width:160px}
+    .btn-primary{background:var(--brand-pink);color:white;box-shadow:0 10px 25px rgba(255,51,133,.3)}
+    .btn-primary:hover{background:#ff3385;transform:translateY(-4px);box-shadow:0 15px 35px rgba(255,51,133,.4)}
+    .btn-secondary{background:#f8f8f8;color:#666;border:2px solid #eee}
+    .btn-secondary:hover{background:#eee;color:#333}
+    @media(max-width:768px){.form-grid{grid-template-columns:1fr}.btn-group{flex-direction:column}.btn{width:100%}.page-title{font-size:1.7rem}}
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <aside></aside>
+
+    <main>
+      <div class="page-title">
+        <span class="material-symbols-sharp" style="font-size:2.5rem;color:var(--brand-pink)">add_box</span>
+        <h1 id="page-title">Add New Product</h1>
+      </div>
+
+      <div class="form-container">
+        <form id="productForm">
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label for="productName">Product Name</label>
+              <input type="text" id="productName" placeholder="e.g. Classic Red Rose Bouquet" required>
+            </div>
+
+            <div class="form-group">
+              <label for="price">Price (₦)</label>
+              <input type="number" id="price" placeholder="45000" min="0" required>
+            </div>
+
+            <div class="form-group">
+              <label for="category">Category</label>
+              <select id="category" required>
+                <option value="">Select category</option>
+                <option value="rose">Roses</option>
+                <option value="tulip">Tulips</option>
+                <option value="sunflower">Sunflowers</option>
+                <option value="mixed">Mixed Bouquets</option>
+                <option value="box">Flower Boxes</option>
+                <option value="premium">Premium Collection</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="stock">Stock Quantity</label>
+              <input type="number" id="stock" placeholder="12" min="0" value="10">
+            </div>
+
+            <div class="form-group full">
+              <label for="description">Description</label>
+              <textarea id="description" placeholder="Describe this beautiful bouquet..."></textarea>
+            </div>
+
+            <div class="form-group full">
+              <label>Product Image</label>
+              <div class="image-upload" id="imageUpload">
+                <div class="upload-icon">photo_camera</div>
+                <p style="margin:1rem 0;color:#666"><strong>Click to upload</strong> or drag & drop<br><small>PNG, JPG up to 5MB</small></p>
+                <input type="file" id="imageInput" accept="image/*" style="display:none;">
+                <img id="preview" class="preview-img" style="display:none;">
+              </div>
+            </div>
+
+          </div>
+
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary">
+              <span class="material-symbols-sharp">save</span>
+              Save Product
+            </button>
+            <a href="products.html" class="btn btn-secondary">
+              <span class="material-symbols-sharp">arrow_back</span>
+              Back to Products
+            </a>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- FIXED JS — Paste directly here (no external file needed) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let products = JSON.parse(localStorage.getItem('valspack_products') || '[]');
+      const urlParams = new URLSearchParams(window.location.search);
+      const editId = urlParams.get('id');
+      const currentProduct = editId ? products.find(p => p.id == editId) : null;
+
+      const preview = document.getElementById('preview');
+      const imageInput = document.getElementById('imageInput');
+      const uploadArea = document.getElementById('imageUpload');
+      let currentImageBase64 = currentProduct?.image || '';
+
+      // Edit mode
+      if (currentProduct) {
+        document.getElementById('page-title').textContent = 'Edit Product';
+        document.getElementById('productName').value = currentProduct.name;
+        document.getElementById('price').value = currentProduct.price;
+        document.getElementById('stock').value = currentProduct.stock;
+        document.getElementById('category').value = currentProduct.category || '';
+        document.getElementById('description').value = currentProduct.description || '';
+        if (currentProduct.image) {
+          preview.src = currentProduct.image; preview.style.display = 'block';
+          currentImageBase64 = currentProduct.image;
+        }
+      }
+
+      const readImage = file => {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+          preview.src = e.target.result; preview.style.display = 'block';
+          currentImageBase64 = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      };
+
+      uploadArea.addEventListener('click', () => imageInput.click());
+      imageInput.addEventListener('change', () => imageInput.files[0] && readImage(imageInput.files[0]));
+      ['dragover','dragenter'].forEach(e=>uploadArea.addEventListener(e,ev=>{ev.preventDefault();uploadArea.classList.add('dragover')}));
+      ['dragleave','drop'].forEach(e=>uploadArea.addEventListener(e,ev=>{ev.preventDefault();uploadArea.classList.remove('dragover')}));
+      uploadArea.addEventListener('drop', e => e.dataTransfer.files[0] && readImage(e.dataTransfer.files[0]));
+
+      document.getElementById('productForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const name = document.getElementById('productName').value.trim();
+        const price = document.getElementById('price').value;
+        const stock = document.getElementById('stock').value;
+        const category = document.getElementById('category').value;
+
+        if (!name || !price || !category || !currentImageBase64) {
+          alert('Please fill all fields and upload an image!');
+          return;
+        }
+
+        const product = {
+          id: currentProduct ? currentProduct.id : Date.now(),
+          name, price: parseFloat(price), stock: parseInt(stock) || 0,
+          category, description: document.getElementById('description').value.trim(),
+          image: currentImageBase64,
+          dateAdded: currentProduct?.dateAdded || new Date().toISOString().split('T')[0]
+        };
+
+        if (currentProduct) {
+          products = products.map(p => p.id === currentProduct.id ? product : p);
+        } else {
+          products.push(product);
+        }
+
+        localStorage.setItem('valspack_products', JSON.stringify(products));
+        alert(currentProduct ? 'Bouquet updated!' : 'New flower added successfully!');
+        window.location.href = 'products.html';
+      });
+    });
+  </script>
+</body>
+</html>

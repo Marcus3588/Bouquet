@@ -1,1 +1,179 @@
 <!--Product details (buoquet info + add to cart)-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="productTitle">Loading... - Val's Pack</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin:0; background:#fff5f8; font-family:'Segoe UI',sans-serif; padding-top:80px; }
+
+    /* Back Button – Works on ALL devices */
+    .back-btn {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background: white;
+      color: #ff66b2;
+      padding: 14px 20px;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1rem;
+      text-decoration: none;
+      box-shadow: 0 15px 35px rgba(255,102,178,0.25);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s;
+    }
+    .back-btn:hover { background:#ff66b2; color:white; transform:translateX(-5px); }
+
+    .product-container {
+      max-width: 1300px;
+      margin: 40px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .product-gallery { position: sticky; top: 90px; }
+    .main-image {
+      width: 100%;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 25px 70px rgba(255,102,178,0.25);
+    }
+    .main-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.6s;
+    }
+    .main-image:hover img { transform: scale(1.06); }
+
+    .product-info h1 {
+      font-size: 3.5rem;
+      color: #ff3385;
+      margin: 0 0 15px;
+      line-height: 1.2;
+    }
+    .price {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #ff3385;
+      margin: 20px 0;
+    }
+    .description {
+      font-size: 1.25rem;
+      line-height: 1.9;
+      color: #555;
+      margin: 30px 0;
+    }
+    .add-to-cart {
+      width: 100%;
+      padding: 22px;
+      background: linear-gradient(135deg, #ff3385, #ff66b2);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.6rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.4s;
+      margin: 30px 0;
+    }
+    .add-to-cart:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(255,51,133,0.4);
+    }
+
+    /* RESPONSIVE BREAKPOINTS */
+    @media (max-width: 1200px) {
+      .product-container { gap: 50px; }
+      .product-info h1 { font-size: 3.2rem; }
+    }
+    @media (max-width: 992px) {
+      .product-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        margin-top: 20px;
+      }
+      .product-gallery { position: static; }
+      .product-info h1 { font-size: 2.9rem; text-align: center; }
+      .price { text-align: center; }
+    }
+    @media (max-width: 768px) {
+      body { padding-top: 70px; }
+      .back-btn { top: 10px; left: 10px; padding: 12px 16px; font-size: 0.95rem; }
+      .product-info h1 { font-size: 2.6rem; }
+      .price { font-size: 2.5rem; }
+      .add-to-cart { font-size: 1.5rem; padding: 20px; }
+    }
+    @media (max-width: 480px) {
+      .product-info h1 { font-size: 2.2rem; }
+      .price { font-size: 2.2rem; }
+      .description { font-size: 1.15rem; }
+      .add-to-cart { font-size: 1.4rem; padding: 18px; }
+      .main-image { border-radius: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Back Button -->
+  <a href="javascript:history.back()" class="back-btn">
+    <i class="fas fa-arrow-left"></i> Back
+  </a>
+
+  <div class="product-container">
+    <div class="product-gallery">
+      <div class="main-image">
+        <img id="mainImg" src="" alt="Bouquet">
+      </div>
+    </div>
+
+    <div class="product-info">
+      <h1 id="productTitle">Loading...</h1>
+      <div class="price" id="productPrice">$0.00</div>
+      <p class="description" id="productDesc">Loading description...</p>
+      <button class="add-to-cart" onclick="addToCartFromProduct()">
+        Add to Cart
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    const products = JSON.parse(localStorage.getItem('products') || '[]');
+    const product = products.find(p => p.id == id);
+
+    if (!product) {
+      document.body.innerHTML = "<h1 style='text-align:center;padding:100px;color:#ff66b2;'>Product not found</h1>";
+    } else {
+      document.getElementById('productTitle').textContent = product.name;
+      document.getElementById('productPrice').textContent = '$' + product.price.toFixed(2);
+      document.getElementById('productDesc').textContent = product.description || "A stunning handcrafted bouquet made with love.";
+      document.getElementById('mainImg').src = product.image || "images/default-bouquet.jpg";
+    }
+
+    function addToCartFromProduct() {
+      let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const existing = cart.find(item => item.id == product.id);
+      if (existing) existing.quantity += 1;
+      else cart.push({ ...product, quantity: 1 });
+      localStorage.setItem('cart', JSON.stringify(cart));
+      alert('Added to cart!');
+      document.querySelectorAll('.cart-count').forEach(el => 
+        el.textContent = cart.reduce((s,i) => s + i.quantity, 0)
+      );
+    }
+  </script>
+</body>
+</html>

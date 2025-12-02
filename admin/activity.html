@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Activity • Val's Pack Empire</title>
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+  
+  <style>
+    :root { --brand-pink: #ff3385; }
+    main { padding: 2rem; max-width: 1000px; margin: 0 auto; }
+    .page-title {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--text-primary);
+    }
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #27ae60;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .live-dot {
+      width: 12px;
+      height: 12px;
+      background: #27ae60;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(39,174,96,0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(39,174,96,0); }
+      100% { box-shadow: 0 0 0 0 rgba(39,174,96,0); }
+    }
+
+    .activity-container {
+      background: white;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(255,51,133,.15);
+    }
+    .activity-header {
+      padding: 1.8rem 2rem;
+      background: linear-gradient(135deg, var(--brand-pink), #ff66aa);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .activity-header h2 { margin: 0; font-size: 1.6rem; }
+    .clear-btn {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.4rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .activity-list { max-height: 70vh; overflow-y: auto; }
+    .activity-item {
+      padding: 1.6rem 2rem;
+      border-bottom: 1px solid #f0e6f8;
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+      transition: all 400ms ease;
+      animation: slideIn 0.6s ease forwards;
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    .activity-item.new { background: #fff5fb; border-left: 5px solid var(--brand-pink); animation: flash 3s; }
+    @keyframes slideIn { to { opacity: 1; transform: translateX(0); }
+    @keyframes flash {
+      0%, 100% { background: #fff5fb; }
+      50% { background: #ffecf5; }
+    }
+
+    .activity-icon {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      color: white;
+      flex-shrink: 0;
+    }
+    .type-order { background: #27ae60; }
+    .type-cancel { background: #e74c3c; }
+    .type-message { background: #3498db; }
+    .type-signup { background: #9b59b6; }
+    .type-product { background: #f39c12; }
+    .type-payment { background: #1abc9c; }
+    .type-delivery { background: #2c3e50; }
+    .type-lowstock { background: #e67e22; }
+
+    .activity-content h4 {
+      margin: 0;
+      font-size: 1.15rem;
+      color: #222;
+      font-weight: 600;
+    }
+    .activity-content p {
+      margin: 0.4rem 0 0;
+      color: #666;
+      font-size: 0.98rem;
+    }
+    .activity-time {
+      margin-left: auto;
+      color: #999;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    /* TOAST NOTIFICATION */
+    .toast {
+      position: fixed;
+      top: 100px;
+      right: 30px;
+      background: #333;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      z-index: 9999;
+      transform: translateX(400px);
+      transition: transform 0.5s ease;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      max-width: 380px;
+    }
+    .toast.show { transform: translateX(0); }
+    .toast.success { border-left: 6px solid #27ae60; }
+    .toast.warning { border-left: 6px solid #f39c12; }
+    .toast.danger { border-left: 6px solid #e74c3c; }
+
+    .no-activity {
+      text-align: center;
+      padding: 5rem;
+      color: #ccc;
+      font-size: 1.3rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside></aside>
+
+    <main>
+      <div class="page-title">
+        <span class="material-symbols-sharp" style="font-size:3rem;color:var(--brand-pink)">notifications_active</span>
+        <h1>Live System Activity</h1>
+      </div>
+
+      <div class="live-indicator">
+        <div class="live-dot"></div>
+        <span>LIVE • Watching your empire in real-time</span>
+      </div>
+
+      <div class="activity-container">
+        <div class="activity-header">
+          <h2>Real-Time Activity Feed</h2>
+          <button class="clear-btn" onclick="clearActivity()">Clear All</button>
+        </div>
+
+        <div class="activity-list" id="activityList">
+          <div class="no-activity">
+            <p>Your empire is quiet...</p>
+            <p style="color:var(--brand-pink);font-size:1.5rem;">Waiting for magic to happen</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toastContainer"></div>
+
+  <script>
+    const activityList = document.getElementById('activityList');
+    let lastActivityCount = 0;
+
+    // PLAY SOUND + SHOW TOAST + ADD TO LOG
+    function addActivity(type, title, desc, icon = 'notifications') {
+      const activities = JSON.parse(localStorage.getItem('valspack_activity') || '[]');
+
+      const newActivity = {
+        type,
+        title,
+        desc,
+        icon,
+        timestamp: new Date().toISOString()
+      };
+
+      activities.push(newActivity);
+      if (activities.length > 200) activities.shift();
+      localStorage.setItem('valspack_activity', JSON.stringify(activities));
+
+      // Play sound
+      const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-bell-notification-933.mp3');
+      audio.volume = 0.5;
+      audio.play().catch(() => {});
+
+      // Show toast
+      showToast(type, title, desc);
+
+      // Add to list with animation
+      const item = document.createElement('div');
+      item.className = 'activity-item new';
+      item.innerHTML = `
+        <div class="activity-icon type-${type}">
+          <span class="material-symbols-sharp">${icon}</span>
+        </div>
+        <div class="activity-content">
+          <h4>${title}</h4>
+          <p>${desc}</p>
+        </div>
+        <div class="activity-time">Just now</div>
+      `;
+      activityList.prepend(item);
+
+      // Remove "new" class after 3s
+      setTimeout(() => item.classList.remove('new'), 3000);
+    }
+
+    function showToast(type, title, desc) {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type === 'cancel' ? 'danger' : type === 'lowstock' ? 'warning' : 'success'} show`;
+      toast.innerHTML = `
+        <span class="material-symbols-sharp">
+          ${type === 'order' ? 'shopping_bag' : 
+           type === 'cancel' ? 'cancel' :
+           type === 'message' ? 'chat' :
+           type === 'signup' ? 'person_add' :
+           type === 'payment' ? 'payments' : 'notifications'}
+        </span>
+        <div>
+          <strong>${title}</strong><br>
+          <small>${desc}</small>
+        </div>
+      `;
+      document.getElementById('toastContainer').appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 500);
+      }, 5000);
+    }
+
+    function loadActivity() {
+      const activities = JSON.parse(localStorage.getItem('valspack_activity') || '[]');
+      
+      if (activities.length === 0) {
+        activityList.innerHTML = `<div class="no-activity">
+          <p>Your empire is quiet...</p>
+          <p style="color:var(--brand-pink);font-size:1.8rem;">Waiting for the first sale</p>
+        </div>`;
+        return;
+      }
+
+      const currentCount = activities.length;
+      if (currentCount > lastActivityCount) {
+        // New activity arrived → trigger sound & toast for latest
+        const latest = activities[activities.length - 1];
+        showToast(latest.type, latest.title, latest.desc);
+        const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-bell-notification-933.mp3');
+        audio.play().catch(() => {});
+      }
+      lastActivityCount = currentCount;
+
+      activityList.innerHTML = activities.slice().reverse().map(a => `
+        <div class="activity-item ${a.type === 'cancel' ? 'danger' : ''}">
+          <div class="activity-icon type-${a.type}">
+            <span class="material-symbols-sharp">${a.icon}</span>
+          </div>
+          <div class="activity-content">
+            <h4>${a.title}</h4>
+            <p>${a.desc}</p>
+          </div>
+          <div class="activity-time">${timeAgo(a.timestamp)}</div>
+        </div>
+      `).join('');
+    }
+
+    function timeAgo(ts) {
+      const diff = Date.now() - new Date(ts);
+      const min = Math.floor(diff / 60000);
+      if (min < 1) return 'Just now';
+      if (min < 60) return min + ' min ago';
+      if (diff < 86400000) return Math.floor(min/60) + ' hr ago';
+      return new Date(ts).toLocaleDateString();
+    }
+
+    function clearActivity() {
+      if (confirm('Clear all activity log?')) {
+        localStorage.removeItem('valspack_activity');
+        activityList.innerHTML = '<div class="no-activity">Log cleared by Queen</div>';
+      }
+    }
+
+    // LOAD ON START + EVERY 4 SECONDS
+    loadActivity();
+    setInterval(loadActivity, 4000);
+
+    // TEST BUTTON (remove later if you want)
+    window.testNotify = () => {
+      const types = ['order','message','payment','cancel','signup','product'];
+      const rand = types[Math.floor(Math.random()*types.length)];
+      addActivity(rand, 'Test Notification', 'Real-time system is working perfectly!', 'celebration');
+    };
+  </script>
+</body>
+</html>

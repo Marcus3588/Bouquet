@@ -1,1 +1,26 @@
-node dependecnies
+{
+  "name": "bouquet",
+  "version": "1.0.0",
+  "description": "Project Documentation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Marcus3588/Bouquet.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Marcus3588/Bouquet/issues"
+  },
+  "homepage": "https://github.com/Marcus3588/Bouquet#readme",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

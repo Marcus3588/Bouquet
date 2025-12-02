@@ -1,1 +1,227 @@
 <!--Admin setings-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile • Val's Pack Admin</title>
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+  
+  <style>
+    main { padding: 2rem; max-width: 800px; margin: 0 auto; }
+    .page-title { font-size: 2.2rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; color: var(--text-primary); }
+    
+    .profile-card {
+      background: white;
+      border-radius: 28px;
+      padding: 3rem;
+      box-shadow: 0 15px 50px rgba(255, 51, 133, 0.15);
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .profile-photo-large {
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 6px solid var(--brand-pink);
+      box-shadow: 0 10px 30px rgba(255, 51, 133, 0.3);
+      margin: 0 auto 1.5rem;
+      cursor: pointer;
+      transition: all 300ms;
+    }
+    .profile-photo-large:hover { transform: scale(1.05); }
+
+    .upload-area {
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      border: 4px dashed #ffcce6;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff5fb;
+      cursor: pointer;
+      transition: all 300ms;
+    }
+    .upload-area:hover { border-color: var(--brand-pink); background: #ffe6f5; }
+
+    .profile-name {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #222;
+      margin: 0.5rem 0;
+    }
+    .profile-role {
+      font-size: 1.1rem;
+      color: var(--brand-pink);
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .info-item {
+      background: #f8f8f8;
+      padding: 1.5rem;
+      border-radius: 18px;
+      text-align: left;
+    }
+
+    .info-label {
+      font-size: 0.9rem;
+      color: #888;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .info-value {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #222;
+    }
+
+    .edit-btn {
+      background: var(--brand-pink);
+      color: white;
+      padding: 0.9rem 2rem;
+      border-radius: 14px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 2rem;
+      font-size: 1.1rem;
+      transition: all 300ms;
+    }
+    .edit-btn:hover {
+      background: #ff3385;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(255,51,133,0.3);
+    }
+
+    @media (max-width: 768px) {
+      .profile-card { padding: 2rem; }
+      .profile-photo-large, .upload-area { width: 120px; height: 120px; }
+      .profile-name { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <aside> <!-- your sidebar --> </aside>
+
+    <main>
+      <div class="page-title">
+        <span class="material-symbols-sharp" style="font-size:2.8rem;color:var(--brand-pink)">account_circle</span>
+        <h1>My Profile</h1>
+      </div>
+
+      <div class="profile-card">
+        <!-- Photo -->
+        <div id="photoContainer">
+          <img id="profilePhoto" src="./assets/product/image/profile.jpg" alt="Admin" class="profile-photo-large">
+        </div>
+
+        <!-- Upload area (hidden until edit) -->
+        <div id="uploadArea" class="upload-area" style="display:none;">
+          <span class="material-symbols-sharp" style="font-size:3rem;color:#ff99cc">photo_camera</span>
+          <input type="file" id="photoInput" accept="image/*" style="display:none;">
+        </div>
+
+        <h2 class="profile-name" id="adminName">Irish</h2>
+        <p class="profile-role">Administrator</p>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Full Name</div>
+            <div class="info-value" id="displayName">Irish Val</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Email</div>
+            <div class="info-value" id="displayEmail">irish@valspack.com</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Business</div>
+            <div class="info-value">Val's Pack Luxury Flowers</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Role</div>
+            <div class="info-value">Owner & Queen</div>
+          </div>
+        </div>
+
+        <button class="edit-btn" id="editBtn">Edit Profile</button>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Load saved profile
+    const savedProfile = JSON.parse(localStorage.getItem('valspack_admin_profile') || '{}');
+    if (savedProfile.name) document.getElementById('adminName').textContent = savedProfile.name;
+    if (savedProfile.fullName) document.getElementById('displayName').textContent = savedProfile.fullName;
+    if (savedProfile.email) document.getElementById('displayEmail').textContent = savedProfile.email;
+    if (savedProfile.photo) document.getElementById('profilePhoto').src = savedProfile.photo;
+
+    // Edit mode
+    document.getElementById('editBtn').addEventListener('click', () => {
+      const newName = prompt('Enter your name:', document.getElementById('adminName').textContent);
+      const newEmail = prompt('Enter your email:', document.getElementById('displayEmail').textContent);
+
+      if (newName) {
+        document.getElementById('adminName').textContent = newName;
+        document.getElementById('displayName').textContent = newName + ' Val';
+      }
+      if (newEmail) document.getElementById('displayEmail').textContent = newEmail;
+
+      // Save to localStorage
+      const profile = {
+        name: document.getElementById('adminName').textContent,
+        fullName: document.getElementById('displayName').textContent,
+        email: document.getElementById('displayEmail').textContent,
+        photo: document.getElementById('profilePhoto').src
+      };
+      localStorage.setItem('valspack_admin_profile', JSON.stringify(profile));
+      alert('Profile updated, Queen!');
+    });
+
+    // Change profile photo
+    const photoContainer = document.getElementById('photoContainer');
+    const uploadArea = document.getElementById('uploadArea');
+    const photoInput = document.getElementById('photoInput');
+    const profilePhoto = document.getElementById('profilePhoto');
+
+    photoContainer.addEventListener('click', () => {
+      photoContainer.style.display = 'none';
+      uploadArea.style.display = 'flex';
+    });
+
+    uploadArea.addEventListener('click', () => photoInput.click());
+
+    photoInput.addEventListener('change', () => {
+      if (photoInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          profilePhoto.src = e.target.result;
+          uploadArea.style.display = 'none';
+          photoContainer.style.display = 'block';
+          
+          // Save photo
+          const profile = JSON.parse(localStorage.getItem('valspack_admin_profile') || '{}');
+          profile.photo = e.target.result;
+          localStorage.setItem('valspack_admin_profile', JSON.stringify(profile));
+        };
+        reader.readAsDataURL(photoInput.files[0]);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports • Val's Pack Admin</title>
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <style>
+    :root { --pink: #ff3385; --light-pink: #fff5 and #ffe6f5; }
+    main { padding: 2rem; font-family: 'Segoe UI', sans-serif; }
+    .page-title { font-size: 2.4rem; font-weight: 800; color: #222; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+    .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+    .card { background: white; border-radius: 20px; padding: 1.8rem; box-shadow: 0 12px 35px rgba(255,51,133,0.1); border: 1px solid #ffe6f5; text-align: center; }
+    .card-value { font-size: 2.2rem; font-weight: 800; color: var(--pink); margin: 0.5rem 0; }
+    .card-label { color: #666; font-size: 1rem; }
+
+    .filters { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; align-items: center; background: white; padding: 1.5rem; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    .date-input { padding: 0.9rem 1.4rem; border: 2px solid #f0e6f8; border-radius: 14px; font-size: 1rem; }
+    .btn { padding: 0.9rem 1.8rem; border-radius: 14px; font-weight: 600; cursor: pointer; border: none; transition: all 300ms; }
+    .btn-primary { background: var(--pink); color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--pink); color: var(--pink); }
+
+    .chart-container { background: white; border-radius: 20px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 12px 35px rgba(255,51,133,0.1); }
+    .chart-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem; color: #222; display: flex; align-items: center; gap: 0.8rem; }
+
+    .daily-table { width: 100%; border-collapse: collapse; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 12px 35px rgba(255,51,133,0.1); }
+    .daily-table th { background: #fff0f8; padding: 1.4rem 1rem; text-align: left; font-weight: 700; color: #333; }
+    .daily-table td { padding: 1.3rem 1rem; border-bottom: 1px solid #ffe6f5; }
+    .daily-table tr:hover { background: #fff8fb; cursor: pointer; }
+    .daily-table tr.clickable { transition: all 300ms; }
+    .daily-table tr.clickable:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(255,51,133,0.15); }
+
+    .status-badge { padding: 0.4rem 1rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600; }
+    .delivered { background: #e6f7e6; color: #27ae60; }
+    .processing { background: #e6f7ff; color: #1890ff; }
+    .cancelled { background: #ffe6e6; color: #e74c3c; }
+    .pending { background: #fff4e6; color: #e67e22; }
+
+    .total-row { background: #fff0f8; font-weight: 800; font-size: 1.1rem; }
+    .amount { color: var(--pink); font-weight: 700; }
+
+    @media (max-width: 768px) {
+      .filters { flex-direction: column; align-items: stretch; }
+      .summary-cards { grid-template-columns: 1fr 1fr; }
+      .daily-table { font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside> <!-- your sidebar → make Reports active --> </aside>
+
+    <main>
+      <div class="page-title">
+        <span class="material-symbols-sharp" style="font-size:2.8rem;color:var(--pink)">assessment</span>
+        <h1>Business Reports</h1>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="summary-cards">
+        <div class="card"><div class="card-value" id="totalRevenue">₦0</div><div class="card-label">Total Revenue</div></div>
+        <div class="card"><div class="card-value" id="totalOrders">0</div><div class="card-label">Total Orders</div></div>
+        <div class="card"><div class="card-value" id="deliveredCount">0</div><div class="card-label">Delivered</div></div>
+        <div class="card"><div class="card-value" id="cancelledCount">0</div><div class="card-label">Cancelled</div></div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <div style="display:flex;gap:1rem;align-items:center;flex:1;">
+          <input type="date" class="date-input" id="startDate">
+          <span>to</span>
+          <input type="date" class="date-input" id="endDate">
+          <button class="btn btn-primary" onclick="applyDateRange()">Apply Range</button>
+          <button class="btn btn-outline" onclick="resetDate()">Today</button>
+        </div>
+        <button class="btn btn-primary" onclick="exportExcel()">Export Excel</button>
+      </div>
+
+      <!-- Daily Breakdown Table -->
+      <div class="chart-container">
+        <div class="chart-title">
+          <span class="material-symbols-sharp">calendar_today</span>
+          Daily Order Summary (Click any row to see full details)
+        </div>
+        <table class="daily-table" id="dailyTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Orders</th>
+              <th>Revenue</th>
+              <th>Delivered</th>
+              <th>Processing</th>
+              <th>Cancelled</th>
+              <th>Success Rate</th>
+            </tr>
+          </thead>
+          <tbody id="dailyBody">
+            <!-- Filled by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Chart -->
+      <div class="chart-container">
+        <div class="chart-title">
+          <span class="material-symbols-sharp">trending_up</span>
+          Revenue Trend
+        </div>
+        <canvas id="revenueChart" height="100"></canvas>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Sample real-looking data
+    const rawOrders = [
+      {id:"ORD-048", date:"2025-11-24", customer:"Chioma Okeke", total:130000, status:"delivered"},
+      {id:"ORD-047", date:"2025-11-24", customer:"Tunde Balogun", total:68000, status:"processing"},
+      {id:"ORD-046", date:"2025-11-23", customer:"Aisha Yusuf", total:198000, status:"delivered"},
+      {id:"ORD-045", date:"2025-11-23", customer:"Sarah Adebayo", total:45000, status:"delivered"},
+      {id:"ORD-044", date:"2025-11-22", customer:"David Okafor", total:420000, status:"cancelled"},
+      {id:"ORD-043", date:"2025-11-22", customer:"Fatima Ibrahim", total:89000, status:"delivered"},
+      {id:"ORD-042", date:"2025-11-21", customer:"Emeka Nwosu", total:156000, status:"delivered"},
+      {id:"ORD-041", date:"2025-11-21", customer:"Lara Adeyemi", total:72000, status:"processing"}
+    ];
+
+    let filteredOrders = [...rawOrders];
+
+    function groupByDate() {
+      const groups = {};
+      filteredOrders.forEach(o => {
+        if (!groups[o.date]) groups[o.date] = {orders:[], delivered:0, processing:0, cancelled:0, pending:0, revenue:0};
+        groups[o.date].orders.push(o);
+        groups[o.date].revenue += o.total;
+        groups[o.date][o.status] += 1;
+      });
+      return groups;
+    }
+
+    function renderDailyTable() {
+      const groups = groupByDate();
+      const tbody = document.getElementById('dailyBody');
+      tbody.innerHTML = Object.keys(groups).sort((a,b)=>b.localeCompare(a)).map(date => {
+        const g = groups[date];
+        const total = g.orders.length;
+        const success = total > 0 ? Math.round((g.delivered / total) * 100) : 0;
+        return `
+          <tr class="clickable" onclick="openDayDetails('${date}')">
+            <td><strong>${new Date(date).toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long'})}</strong></td>
+            <td>${total}</td>
+            <td class="amount">₦${g.revenue.toLocaleString()}</td>
+            <td><span class="status-badge delivered">${g.delivered}</span></td>
+            <td><span class="status-badge processing">${g.processing}</span></td>
+            <td><span class="status-badge cancelled">${g.cancelled}</span></td>
+            <td><strong>${success}%</strong></td>
+          </tr>
+        `;
+      }).join('');
+      updateSummary(groups);
+      renderChart(groups);
+    }
+
+    function updateSummary(groups) {
+      const all = Object.values(groups).flatMap(g => g.orders);
+      const revenue = all.reduce((s,o)=>s+o.total,0);
+      const delivered = all.filter(o=>o.status==="delivered").length;
+      const cancelled = all.filter(o=>o.status==="cancelled").length;
+
+      document.getElementById('totalRevenue').textContent = `₦${revenue.toLocaleString()}`;
+      document.getElementById('totalOrders').textContent = all.length;
+      document.getElementById('deliveredCount').textContent = delivered;
+      document.getElementById('cancelledCount').textContent = cancelled;
+    }
+
+    function renderChart(groups) {
+      const ctx = document.getElementById('revenueChart').getContext('2d');
+      if (window.myChart) window.myChart.destroy();
+      window.myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: Object.keys(groups).sort().reverse().map(d => new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short'})),
+          datasets: [{
+            label: 'Daily Revenue',
+            data: Object.keys(groups).sort().reverse().map(d => groups[d].revenue),
+            borderColor: '#ff3385',
+            backgroundColor: 'rgba(255,51,133,0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+      });
+    }
+
+    function applyDateRange() {
+      const start = document.getElementById('startDate').value;
+      const end = document.getElementById('endDate').value;
+      if (!start || !end) return alert("Please select both dates");
+      filteredOrders = rawOrders.filter(o => o.date >= start && o.date <= end);
+      renderDailyTable();
+    }
+
+    function resetDate() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('startDate').value = today;
+      document.getElementById('endDate').value = today;
+      filteredOrders = rawOrders.filter(o => o.date === today);
+      renderDailyTable();
+    }
+
+    function openDayDetails(date) {
+      const dayOrders = filteredOrders.filter(o => o.date === date);
+      let details = `ORDERS FOR ${new Date(date).toLocaleDateString('en-GB',{weekday:'long', day:'numeric', month:'long', year:'numeric'})}\n\n`;
+      dayOrders.forEach(o => {
+        details += `#${o.id} • ${o.customer} • ₦${o.total.toLocaleString()} • ${o.status.toUpperCase()}\n`;
+      });
+      alert(details);
+      // Future: Open modal or new page with full list
+    }
+
+    function exportExcel() {
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(filteredOrders.map(o => ({
+        Date: o.date,
+        "Order ID": o.id,
+        Customer: o.customer,
+        Revenue: o.total,
+        Status: o.status
+      })));
+      ws['!cols'] = [{wch:12},{wch:12},{wch:25},{wch:15},{wch:12}];
+      XLSX.utils.book_append_sheet(wb, ws, "Orders");
+      const today = new Date().toISOString().slice(0,10);
+      XLSX.writeFile(wb, `Vals_Pack_Report_${today}.xlsx`);
+    }
+
+    // Init
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('startDate').value = today;
+    document.getElementById('endDate').value = today;
+    filteredOrders = rawOrders;
+    renderDailyTable();
+  </script>
+</body>
+</html>

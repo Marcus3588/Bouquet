@@ -1,2 +1,156 @@
-<!--Admin login (OAuth or JWT auth)
-	
+<!--Admin login (OAuth or JWT auth)!-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Val's Pack • Admin Login</title>
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: #fffaf8; font-family: 'Poppins', sans-serif; color: #333; display: grid; place-items: center; padding: 1rem; }
+    .login-container { width: 100%; max-width: 420px; text-align: center; }
+    .logo1 { width: 78px; height: 78px; background: linear-gradient(135deg, #ff3385, #ff66b2); color: white; font-size: 40px; font-weight: bold; border-radius: 20px; display: grid; place-items: center; margin: 0 auto 2.8rem; box-shadow: 0 12px 35px rgba(255,51,133,0.28); }
+    h1 { font-size: clamp(26px, 5vw, 30px); font-weight: 600; margin: 0 0 1rem; color: #222; }
+    .subtitle { color: #666; margin-bottom: 2rem; font-size: clamp(14px, 3.8vw, 15px); }
+    .form-group { margin-bottom: 1.6rem; text-align: left; }
+    label { display: block; margin-bottom: 0.6rem; color: #555; font-size: clamp(13px, 3.5vw, 14px); font-weight: 500; }
+    input { width: 100%; padding: clamp(12px, 3vw, 16px) 16px; border: 1.8px solid #ffe6f5; border-radius: 14px; font-size: clamp(15px, 4vw, 17px); background: #fff; transition: all 0.25s ease; }
+    input:focus { outline: none; border-color: #ff66b2; box-shadow: 0 0 0 5px rgba(255,102,178,0.15); }
+    .login-btn, .google-btn {
+      width: 100%; padding: clamp(14px, 3.5vw, 18px); font-size: clamp(16px, 4vw, 18px); font-weight: 600; border: none; border-radius: 16px; cursor: pointer; margin: 1rem 0; box-shadow: 0 12px 30px rgba(255,51,133,0.3); transition: all 0.25s ease;
+    }
+    .login-btn { background: linear-gradient(135deg, #ff3385, #ff66b2); color: white; }
+    .google-btn { background: #fff; color: #333; border: 1.8px solid #ddd; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .login-btn:hover, .google-btn:hover { transform: translateY(-3px); }
+    .divider { margin: 2rem 0; color: #aaa; position: relative; }
+    .divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: #eee; }
+    .divider span { background: #fffaf8; padding: 0 1rem; }
+    .extra { font-size: clamp(13px, 3.5vw, 14px); color: #777; margin-top: 1.5rem; }
+    .extra a { color: #ff66b2; text-decoration: none; font-weight: 600; }
+    .extra a:hover { text-decoration: underline; }
+    .security-info { margin-top: 1.2rem; font-size: 13px; color: #ff3385; }
+    .lockout { display: none; margin-top: 1rem; font-weight: 600; }
+  </style>
+</head>
+<script src="js/auth.js"></script>
+<body>
+
+  <div class="login-container">
+    <div class="logo1">V</div>
+    <h1>Log in</h1>
+    <p class="subtitle">Welcome back to Val's Pack Admin</p>
+
+    <button class="google-btn" onclick="googleLogin()">
+      <img src="https://www.google.com/favicon.ico" width="20" alt="G">
+      Continue with Google
+    </button>
+
+    <div class="divider"><span>or</span></div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="admin@valspack.com" required>
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="••••••••••" required>
+    </div>
+
+    <button class="login-btn" id="loginBtn" onclick="emailLogin()">Log in with Email</button>
+
+    <div class="extra">
+      <a href="#" onclick="forgotPassword()">Forgot password?</a> • 
+      <a href="#" onclick="forgotUsername()">Forgot username?</a>
+    </div>
+
+    <div class="extra" style="margin-top:1rem;">
+      Don't have an account? <a href="register.html">Create one</a>
+    </div>
+
+    <div class="security-info">
+      Attempts left: <span id="attempts">5</span>
+      <div id="lockout" class="lockout">Too many attempts. Try again in <span id="timer">5:00</span></div>
+    </div>
+  </div>
+
+<script>
+  // Security system
+  let attempts = parseInt(localStorage.getItem('loginAttempts') || '0');
+  let lockoutUntil = parseInt(localStorage.getItem('lockoutUntil') || '0');
+  const MAX_ATTEMPTS = 5;
+
+  function updateUI() {
+    document.getElementById('attempts').textContent = MAX_ATTEMPTS - attempts;
+    if (lockoutUntil > Date.now()) {
+      document.getElementById('loginBtn').disabled = true;
+      document.getElementById('lockout').style.display = 'block';
+      startTimer();
+    }
+  }
+
+  function startTimer() {
+    const interval = setInterval(() => {
+      const left = Math.max(0, Math.ceil((lockoutUntil - Date.now()) / 1000));
+      if (left === 0) { clearInterval(interval); attempts = 0; localStorage.removeItem('loginAttempts'); localStorage.removeItem('lockoutUntil'); updateUI(); return; }
+      const m = String(Math.floor(left / 60)).padStart(2, '0');
+      const s = String(left % 60).padStart(2, '0');
+      document.getElementById('timer').textContent = `${m}:${s}`;
+    }, 500);
+  }
+
+  // SUCCESSFUL LOGIN → GOES TO index.html (YOUR MAIN DASHBOARD)
+  function emailLogin() {
+    if (lockoutUntil > Date.now()) return alert('Account locked — please wait');
+
+    const email = document.getElementById('email').value.trim().toLowerCase();
+    const pass = document.getElementById('password').value;
+
+    const account = JSON.parse(localStorage.getItem('adminAccount') || '{}');
+
+    if (account.email === email && account.password === pass) {
+      // SUCCESS → LOGGED IN + GO TO MAIN DASHBOARD
+      localStorage.setItem('adminLoggedIn', 'true');
+      localStorage.removeItem('loginAttempts');
+      localStorage.removeItem('lockoutUntil');
+      
+      // THIS IS THE KEY LINE → YOUR REAL DASHBOARD
+      window.location.href = 'index.html';
+    } else {
+      attempts++;
+      localStorage.setItem('loginAttempts', attempts);
+      if (attempts >= MAX_ATTEMPTS) {
+        lockoutUntil = Date.now() + 5*60*1000;
+        localStorage.setItem('lockoutUntil', lockoutUntil);
+      }
+      updateUI();
+      alert(`Wrong email or password! ${MAX_ATTEMPTS - attempts} attempts left`);
+    }
+  }
+
+  function googleLogin() {
+    alert('Google Login coming soon! Use email login for now.');
+  }
+
+  function forgotPassword() {
+    const email = prompt('Enter your registered email:');
+    if (!email) return;
+    const account = JSON.parse(localStorage.getItem('adminAccount') || '{}');
+    if (account.email === email.toLowerCase()) {
+      alert(`Your password is: ${account.password}\n\n(We'll add real email soon!)`);
+    } else {
+      alert('No account found with that email');
+    }
+  }
+
+  function forgotUsername() {
+    alert('Your admin email is: admin@valspack.com');
+  }
+
+  updateUI();
+</script>
+
+</body>
+</html>

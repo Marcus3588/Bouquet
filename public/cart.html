@@ -1,1 +1,37 @@
 <!--Cart summary-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart - Val's Pack</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/cart.css">
+</head>
+<body>
+
+  <!-- Back Button -->
+  <a href="javascript:history.back()" class="back-btn">
+    <i class="fas fa-arrow-left"></i> Back
+  </a>
+
+  <div class="cart-container">
+    <div class="cart-header">
+      <h1>Your Cart</h1>
+      <p>Review your beautiful bouquets</p>
+    </div>
+
+    <div id="cartItems" class="cart-items"></div>
+
+    <div class="cart-summary">
+      <h2>Total: <span id="totalPrice" class="total-price">$0.00</span></h2>
+      <button class="checkout-btn" onclick="window.location.href='checkout.html'">
+        Proceed to Checkout
+      </button>
+    </div>
+  </div>
+
+  <script src="assets/js/cart.js"></script>
+</body>
+</html>

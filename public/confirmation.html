@@ -1,1 +1,129 @@
 <!--Order success page-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed - Val's Pack</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .confirmation-container {
+      max-width: 800px;
+      margin: 80px auto;
+      padding: 40px;
+      text-align: center;
+      background: white;
+      border-radius: 30px;
+      box-shadow: 0 20px 60px rgba(255,102,178,0.15);
+    }
+    .success-icon {
+      font-size: 120px;
+      color: #ff66b2;
+      margin-bottom: 20px;
+    }
+    .confirmation-title {
+      font-size: 3rem;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .confirmation-message {
+      font-size: 1.3rem;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 40px;
+    }
+    .order-details {
+      background: #fff5f8;
+      padding: 30px;
+      border-radius: 20px;
+      margin: 30px 0;
+      text-align: left;
+    }
+    .order-id {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #ff66b2;
+      margin-bottom: 15px;
+    }
+    .btn-home {
+      display: inline-block;
+      padding: 18px 40px;
+      background: linear-gradient(135deg, #ff66b2, #ff3385);
+      color: white;
+      border-radius: 50px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .btn-home:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(255,102,178,0.4);
+    }
+    @media (max-width: 600px) {
+      .confirmation-container { margin: 20px; padding: 30px; }
+      .confirmation-title { font-size: 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Minimal header -->
+  <header style="background:white; padding:20px 0; box-shadow:0 4px 20px rgba(0,0,0,0.08); text-align:center;">
+    <h1 style="color:#ff66b2; font-size:2.2rem;">
+      <a href="index.html" style="color:inherit; text-decoration:none;">Val's Pack</a>
+    </h1>
+  </header>
+
+  <div class="confirmation-container">
+    <div class="success-icon">
+      <i class="fas fa-check-circle"></i>
+    </div>
+    <h2 class="confirmation-title">Thank You! Your Order is Confirmed</h2>
+    <p class="confirmation-message">
+      We've received your order and our team is preparing your fresh bouquet with love.<br>
+      You'll receive a WhatsApp/SMS confirmation shortly with delivery updates.
+    </p>
+
+    <div class="order-details">
+      <div class="order-id">Order ID: <span id="orderId">Loading...</span></div>
+      <p><strong>Delivery:</strong> Within 24 hours (same-day) or scheduled date</p>
+      <p><strong>Payment:</strong> Cash on Delivery</p>
+    </div>
+
+    <a href="index.html" class="btn-home">
+      Back to Home
+    </a>
+  </div>
+
+
+
+
+
+
+  <script>
+    // Show order ID and clear data
+    document.addEventListener('DOMContentLoaded', () => {
+      const order = JSON.parse(localStorage.getItem('currentOrder') || '{}');
+      
+      if (order.date) {
+        const orderId = 'VAL' + Date.now().toString().slice(-6);
+        document.getElementById('orderId').textContent = orderId;
+        
+        //  save order ID for future reference
+        localStorage.setItem('lastOrderId', orderId);
+      }
+
+      // Clear everything after showing confirmation
+      localStorage.removeItem('currentOrder');
+      localStorage.removeItem('cart');
+
+      // Update cart count everywhere
+      document.querySelectorAll('.cart-count').forEach(el => {
+        el.textContent = '0';
+      });
+    });
+  </script>
+</body>
+</html>

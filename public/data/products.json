@@ -1,0 +1,13 @@
+
+
+
+{
+  "id": 1,
+  "name": "Classic Red Roses",
+  "price": 49.99,
+  "image": "images/delight.jpg",
+  "occasion": "Love & Romance",
+  "description": "12 premium red roses symbolizing deep love and passion. Perfect for Valentine's Day, anniversaries, or saying 'I love you'.",
+  "images": ["images/delight.jpg", "images/delight-2.jpg", "images/delight-3.jpg"],
+  "bestSeller": true
+}

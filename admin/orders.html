@@ -1,1 +1,137 @@
-<!--Manage customer orders
+<!--Manage customer orders!-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders • Val's Pack Admin</title>
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+  <style>
+    main { padding: 2rem; }
+    .page-title { font-size: 2.2rem; font-weight: 700; color: #222; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
+    .filters { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .filter-btn { padding: 0.8rem 1.6rem; border: 2px solid #f0e6f8; border-radius: 14px; background: white; cursor: pointer; font-weight: 600; transition: all 300ms; }
+    .filter-btn.active { background: var(--brand-pink); color: white; border-color: var(--brand-pink); }
+    .search-bar { padding: 1rem 1.5rem; border: 2px solid #f0e6f8; border-radius: 16px; width: 100%; max-width: 400px; font-size: 1rem; margin-bottom: 1.5rem; }
+    .search-bar:focus { border-color: var(--brand-pink); outline: none; box-shadow: 0 0 0 4px rgba(255,51,133,0.15); }
+    .orders-table { width: 100%; border-collapse: collapse; background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 15px 40px rgba(255,51,133,0.12); }
+    .orders-table th, .orders-table td { padding: 1.3rem 1rem; text-align: left; }
+    .orders-table th { background: #fff0f8; color: #333; font-weight: 600; }
+    .orders-table tr { cursor: pointer; transition: all 300ms; }
+    .orders-table tr:hover { background: #fff5fb; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,51,133,0.1); }
+    .status { padding: 0.4rem 1rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600; text-transform: capitalize; }
+    .status.pending { background: #fff4e6; color: #e67e22; }
+    .status.processing { background: #e6f7ff; color: #1890ff; }
+    .status.delivered { background: #e6f7e6; color: #27ae60; }
+    .status.cancelled { background: #ffe6e6; color: #e74c3c; }
+    .total-price { font-weight: 700; color: var(--brand-pink); }
+    .no-orders { text-align: center; padding: 4rem; color: #999; font-size: 1.3rem; }
+    @media (max-width: 768px) {
+      .filters { justify-content: center; }
+      .orders-table { font-size: 0.95rem; }
+      .orders-table th, .orders-table td { padding: 1rem 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- YOUR FULL SIDEBAR → make Orders link active -->
+    <aside> <!-- your exact sidebar --> </aside>
+
+    <main>
+      <div class="page-title">
+        <span class="material-symbols-sharp" style="font-size:2.6rem;color:var(--brand-pink)">receipt_long</span>
+        <h1>Orders</h1>
+      </div>
+
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">All Orders</button>
+        <button class="filter-btn" data-filter="pending">Pending</button>
+        <button class="filter-btn" data-filter="processing">Processing</button>
+        <button class="filter-btn" data-filter="delivered">Delivered</button>
+        <button class="filter-btn" data-filter="cancelled">Cancelled</button>
+      </div>
+
+      <input type="text" id="searchInput" class="search-bar" placeholder="Search by order ID, customer, or phone...">
+
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="ordersBody">
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
+    </main>
+  </div>
+
+  <script>
+    const orders = JSON.parse(localStorage.getItem('valspack_orders')) || [
+      { id: "ORD-048", customer: "Chioma Okeke", phone: "+2348123456789", date: "2025-11-24", items: 2, total: 130000, status: "pending" },
+      { id: "ORD-047", customer: "Tunde Balogun", phone: "+2348031112222", date: "2025-11-23", items: 1, total: 68000, status: "processing" },
+      { id: "ORD-046", customer: "Aisha Yusuf", phone: "+2349012345678", date: "2025-11-22", items: 3, total: 198000, status: "delivered" },
+      { id: "ORD-045", customer: "Sarah Adebayo", phone: "+2347065554433", date: "2025-11-21", items: 1, total: 45000, status: "delivered" },
+      { id: "ORD-044", customer: "David Okafor", phone: "+2348189990000", date: "2025-11-20", items: 5, total: 420000, status: "cancelled" }
+    ];
+
+    if (!localStorage.getItem('valspack_orders')) {
+      localStorage.setItem('valspack_orders', JSON.stringify(orders));
+    }
+
+    function renderOrders(filtered = orders) {
+      const tbody = document.getElementById('ordersBody');
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="no-orders">No orders found</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(order => `
+        <tr onclick="openOrderDetails('${order.id}')">
+          <td><strong>#${order.id}</strong></td>
+          <td>${order.customer}<br><small>${order.phone}</small></td>
+          <td>${new Date(order.date).toLocaleDateString('en-GB', {day:'numeric', month:'short'})}</td>
+          <td>${order.items}</td>
+          <td class="total-price">₦${order.total.toLocaleString()}</td>
+          <td><span class="status ${order.status}">${order.status}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    function openOrderDetails(id) {
+      window.location.href = `order-details.html?id=${id}`;
+    }
+
+    // Filters
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        const filtered = filter === 'all' ? orders : orders.filter(o => o.status === filter);
+        renderOrders(filtered);
+      });
+    });
+
+    // Search
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      const filtered = orders.filter(o =>
+        o.id.toLowerCase().includes(query) ||
+        o.customer.toLowerCase().includes(query) ||
+        o.phone.includes(query)
+      );
+      renderOrders(filtered);
+    });
+
+    renderOrders();
+  </script>
+</body>
+</html>

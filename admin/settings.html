@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings • Val's Pack Admin</title>
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+
+  <style>
+    main {
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .settings-container {
+      background: white;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(255, 51, 133, 0.15);
+      border: 1px solid #ffe6f5;
+    }
+
+    .settings-header {
+      background: linear-gradient(135deg, #ff3385, #ff66b2);
+      color: white;
+      padding: 2rem 2.5rem;
+      text-align: center;
+    }
+
+    .settings-header h2 {
+      font-size: 1.8rem;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .settings-body {
+      padding: 2.5rem;
+    }
+
+    .settings-section {
+      margin-bottom: 3rem;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.8rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 0.6rem;
+      font-weight: 600;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 1rem 1.2rem;
+      border: 2px solid #f0e6f8;
+      border-radius: 14px;
+      font-size: 1rem;
+      background: #fff;
+      transition: all 300ms;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--brand-pink);
+      box-shadow: 0 0 0 5px rgba(255, 102, 178, 0.15);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background: var(--brand-pink);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1rem;
+      color: #444;
+    }
+
+    .btn-save {
+      background: var(--brand-pink);
+      color: white;
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: 16px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 300ms;
+      box-shadow: 0 10px 30px rgba(255, 51, 133, 0.3);
+    }
+
+    .btn-save:hover {
+      background: #ff3385;
+      transform: translateY(-4px);
+      box-shadow: 0 15px 40px rgba(255, 51, 133, 0.4);
+    }
+
+    .danger-zone {
+      border: 2px solid #ffe6e6;
+      border-radius: 20px;
+      padding: 2rem;
+      background: #fff5f5;
+      margin-top: 3rem;
+    }
+
+    .danger-title {
+      color: #e74c3c;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .btn-danger {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c0392b;
+    }
+
+    @media (max-width: 768px) {
+      .settings-header { padding: 2rem 1.5rem; }
+      .settings-body { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<script src="js/settings.js"></script>
+<body>
+
+  <div class="container">
+    <!-- YOUR FULL SIDEBAR HERE (Settings link should have class="active") -->
+    <aside>
+      <!-- Paste your sidebar — make Settings link active -->
+    </aside>
+
+    <main>
+      <div class="page-title">
+        <span class="material-symbols-sharp" style="font-size: 2.6rem; color: var(--brand-pink);">settings</span>
+        <h1>Settings</h1>
+      </div>
+
+      <div class="settings-container">
+        <div class="settings-header">
+          <h2>Business & Admin Settings</h2>
+        </div>
+
+        <div class="settings-body">
+
+          <!-- BUSINESS INFO -->
+          <div class="settings-section">
+            <div class="section-title">
+              <span class="material-symbols-sharp">store</span>
+              Business Information
+            </div>
+
+            <div class="form-group">
+              <label>Shop Name</label>
+              <input type="text" value="Val's Pack" placeholder="Your flower shop name">
+            </div>
+
+            <div class="form-group">
+              <label>Phone (WhatsApp)</label>
+              <input type="tel" value="+234 803 000 0000" placeholder="Customer contact number">
+            </div>
+
+            <div class="form-group">
+              <label>Delivery Areas</label>
+              <input type="text" value="Lagos Mainland & Island" placeholder="Where do you deliver?">
+            </div>
+          </div>
+
+          <!-- NOTIFICATIONS -->
+          <div class="settings-section">
+            <div class="section-title">
+              <span class="material-symbols-sharp">notifications</span>
+              Notifications
+            </div>
+
+            <div class="toggle-label">
+              <span>New Order Alert</span>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-label">
+              <span>Low Stock Warning</span>
+              <label class="switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-label">
+              <span>Daily Sales Report</span>
+              <label class="switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- SAVE BUTTON -->
+          <button class="btn-save">
+            <span class="material-symbols-sharp">save</span>
+            Save All Changes
+          </button>
+
+          <!-- DANGER ZONE -->
+          <div class="danger-zone">
+            <div class="danger-title">
+              <span class="material-symbols-sharp">warning</span>
+              Danger Zone
+            </div>
+            <p style="color:#666; margin-bottom:1rem;">Delete all data (orders, products, messages). Cannot be undone.</p>
+            <button class="btn-save btn-danger">
+              <span class="material-symbols-sharp">delete_forever</span>
+              Delete All Data
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

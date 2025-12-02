@@ -1,0 +1,251 @@
+
+ .insights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-gap: 1.8rem;
+  margin-top: 1.5rem;
+}
+
+.insight-card {
+  background: white;
+  border-radius: 22px;
+  padding: 1.8rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.insight-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+}
+
+/* WIDE CARD (FIRST CARD) */
+.insight-card.wide {
+  grid-column: span 2;
+}
+
+.icon {
+  color: #ff3385;
+  padding: 1rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info h3 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.info h1 {
+  margin: 0.3rem 0;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.info p {
+  color: #888;
+  font-size: .85rem;
+}
+
+/* PROGRESS RING */
+.ring {
+  margin-left: auto;
+  position: relative;
+  width: 75px;
+  height: 75px;
+}
+
+.ring svg {
+  width: 75px;
+  height: 75px;
+  transform: rotate(-90deg);
+}
+
+.ring circle {
+  cx: 37;
+  cy: 37;
+  r: 34;
+  fill: none;
+  stroke-width: 7;
+}
+
+.ring .bg {
+  stroke: #f0e4f7;
+}
+
+.ring .fill {
+  stroke: #ff3385;
+  stroke-dasharray: 214;
+  stroke-dashoffset: 214;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.6s ease;
+}
+
+.ring .percent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 700;
+  color: #ff3385;
+}
+
+
+/* CARD WRAPPER */
+.recent-orders-card {
+  background: white;
+  padding: 1.8rem;
+  border-radius: 22px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+  margin-top: 2.5rem;
+}
+
+/* HEADER */
+.roc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.4rem;
+}
+
+.roc-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+/* SHOW ALL BUTTON */
+.view-btn {
+  padding: 0.55rem 1.3rem;
+  border-radius: 12px;
+  background: #ff3385;
+  color: white;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 5px 20px rgba(255,51,133,0.35);
+  transition: 0.25s ease;
+}
+
+.view-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 30px rgba(255,51,133,0.45);
+}
+
+/* TABLE WRAPPER */
+.roc-table-wrapper {
+  overflow-x: auto;
+  max-height: 380px;
+  transition: max-height 0.5s ease;
+  border-radius: 16px;
+}
+
+.roc-table-wrapper.expanded {
+  max-height: 5000px;
+}
+
+/* TABLE */
+.roc-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  font-size: 0.95rem;
+}
+
+.roc-table thead tr {
+  background: transparent;
+}
+
+.roc-table th {
+  text-align: left;
+  padding: 0.7rem 1rem;
+  font-weight: 700;
+  color: #444;
+  font-size: 0.88rem;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 2;
+}
+
+.roc-table tbody tr {
+  background: #faf7fc;
+  border-radius: 12px;
+  transition: 0.25s ease;
+}
+
+.roc-table tbody tr:hover {
+  background: #fff3fa;
+  transform: translateY(-2px);
+}
+
+.roc-table td {
+  padding: 0.9rem 1rem;
+}
+
+/* BADGES */
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+.status-badge.success {
+  background: #d8ffe9;
+  color: #0c8c47;
+}
+
+.status-badge.warning {
+  background: #fff4d9;
+  color: #b68a00;
+}
+
+.status-badge.pending {
+  background: #ffe0e9;
+  color: #ff3385;
+}
+
+/* ACTION LINK */
+.detail-link {
+  color: #ff3385;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.detail-link:hover {
+  text-decoration: underline;
+}
+
+/* MOBILE STACKING */
+@media (max-width: 600px) {
+  .roc-table thead {
+    display: none;
+  }
+
+  .roc-table tr {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .roc-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+  }
+
+  .roc-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #555;
+  }
+}

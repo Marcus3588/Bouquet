@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customers • Val's Pack Admin</title>
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+  <style>
+    main { padding: 2rem; }
+    .page-title { font-size: 2.2rem; font-weight: 700; color: #222; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
+    .search-bar { padding: 1rem 1.5rem; border: 2px solid #f0e6f8; border-radius: 16px; width: 100%; max-width: 500px; font-size: 1rem; margin-bottom: 2rem; }
+    .search-bar:focus { border-color: var(--brand-pink); outline: none; box-shadow: 0 0 0 4px rgba(255,51,133,0.15); }
+    .customers-table { width: 100%; border-collapse: collapse; background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 15px 40px rgba(255,51,133,0.12); }
+    .customers-table th, .customers-table td { padding: 1.2rem 1rem; text-align: left; }
+    .customers-table th { background: #fff0f8; color: #333; font-weight: 600; }
+    .customers-table tr:hover { background: #fff5fb; }
+    .total-spent { color: var(--brand-pink); font-weight: 700; }
+    .pagination { display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem; }
+    .page-btn { padding: 0.8rem 1.2rem; background: white; border: 2px solid #f0e6f8; border-radius: 12px; cursor: pointer; transition: all 300ms; }
+    .page-btn.active, .page-btn:hover { background: var(--brand-pink); color: white; border-color: var(--brand-pink); }
+    @media (max-width: 768px) {
+      .customers-table { font-size: 0.95rem; }
+      .customers-table th, .customers-table td { padding: 1rem 0.8rem; }
+      .search-bar { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside> <!-- your sidebar → make Customers active --> </aside>
+
+    <main>
+      <div class="page-title">
+        <span class="material-symbols-sharp" style="font-size:2.6rem;color:var(--brand-pink)">people</span>
+        <h1>Customers</h1>
+      </div>
+
+      <input type="text" id="searchInput" class="search-bar" placeholder="Search by name, email, or phone..." onkeyup="searchCustomers()">
+
+      <table class="customers-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Orders</th>
+            <th>Total Spent</th>
+          </tr>
+        </thead>
+        <tbody id="customersBody">
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
+
+      <div class="pagination" id="pagination"></div>
+    </main>
+  </div>
+
+  <script>
+    const customers = [
+      { name: "Chioma Okeke", email: "chioma.okeke@gmail.com", phone: "+234 812 345 6789", orders: 14, spent: 428000 },
+      { name: "Aisha Yusuf", email: "aisha.yusuf@outlook.com", phone: "+234 901 234 5678", orders: 9, spent: 312500 },
+      { name: "Tunde Balogun", email: "tunde.b@gmail.com", phone: "+234 803 111 2222", orders: 21, spent: 890000 },
+      { name: "Sarah Adebayo", email: "sarah.adebayo@yahoo.com", phone: "+234 706 555 4433", orders: 6, spent: 185000 },
+      { name: "David Okafor", email: "david@company.com", phone: "+234 818 999 0000", orders: 33, spent: 1520000 },
+      { name: "Fatima Ibrahim", email: "fatima.ibrahim@icloud.com", phone: "+234 809 876 5432", orders: 5, spent: 245000 },
+      { name: "Emeka Nwosu", email: "emeka.nwosu@gmail.com", phone: "+234 702 333 4444", orders: 28, spent: 1,120000 },
+      { name: "Lara Adeyemi", email: "lara@adeyemi.com", phone: "+234 815 666 7777", orders: 11, spent: 467000 }
+    ];
+
+    let currentPage = 1;
+    const perPage = 5;
+
+    function renderCustomers(page = 1) {
+      const start = (page - 1) * perPage;
+      const end = start + perPage;
+      const pageData = customers.slice(start, end);
+
+      document.getElementById('customersBody').innerHTML = pageData.map(c => `
+        <tr onclick="viewCustomer('${c.email}')">
+          <td class="customer-name">${c.name}</td>
+          <td>${c.email}</td>
+          <td>${c.phone}</td>
+          <td>${c.orders}</td>
+          <td class="total-spent">₦${c.spent.toLocaleString()}</td>
+        </tr>
+      `).join('');
+
+      // Pagination
+      const totalPages = Math.ceil(customers.length / perPage);
+      let pagination = '';
+      for (let i = 1; i <= totalPages; i++) {
+        pagination += `<button class="page-btn ${i === page ? 'active' : ''}" onclick="renderCustomers(${i})">${i}</button>`;
+      }
+      document.getElementById('pagination').innerHTML = pagination;
+    }
+
+    function searchCustomers() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = customers.filter(c => 
+        c.name.toLowerCase().includes(query) || 
+        c.email.toLowerCase().includes(query) || 
+        c.phone.includes(query)
+      );
+      renderCustomers(1); // Reset to page 1
+      // Simple search highlight (demo)
+      document.getElementById('customersBody').innerHTML = filtered.map(c => `
+        <tr>
+          <td class="customer-name">${c.name}</td>
+          <td>${c.email}</td>
+          <td>${c.phone}</td>
+          <td>${c.orders}</td>
+          <td class="total-spent">₦${c.spent.toLocaleString()}</td>
+        </tr>
+      `).join('');
+    }
+
+    function viewCustomer(email) {
+      alert(`Opening customer profile for ${email}...`);
+      // Later: window.location = `customer-profile.html?email=${email}`
+    }
+
+    renderCustomers();
+  </script>
+</body>
+</html>

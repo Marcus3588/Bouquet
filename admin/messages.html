@@ -1,1 +1,196 @@
 <!--Customer inquiries / feedback-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messages • Val's Pack Admin</title>
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+
+  <style>
+  main {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  /* FIXED: Beautiful, rich colors that scream Val’s Pack */
+  .page-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #222;                  /* Deep charcoal instead of default gray */
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .page-title span {
+    color: var(--brand-pink) !important;
+  }
+
+  .messages-container {
+    background: white;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(255, 51, 133, 0.15);
+    border: 1px solid #ffe6f5;
+  }
+
+  .messages-header {
+    background: linear-gradient(135deg, #ff3385, #ff66b2);
+    color: white;
+    padding: 1.8rem 2.2rem;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .message-item {
+    padding: 1.8rem 2.2rem;
+    border-bottom: 1px solid #ffe6f5;
+    transition: all 300ms;
+  }
+
+  .message-item:hover {
+    background: #fff5fb;
+  }
+
+  .message-item.unread {
+    background: #fff0f8;
+    position: relative;
+  }
+
+  .message-item.unread::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 7px;
+    background: var(--brand-pink);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .sender-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #222;
+  }
+
+  .message-time {
+    font-size: 0.92rem;
+    color: #888;
+  }
+
+  .message-subject {
+    font-weight: 700;
+    color: #333;
+    margin: 0.4rem 0;
+    font-size: 1.05rem;
+  }
+
+  .message-preview {
+    color: #555;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+
+  .no-messages {
+    text-align: center;
+    padding: 5rem 2rem;
+    color: #999;
+    font-size: 1.3rem;
+  }
+
+
+    @media (max-width: 768px) {
+      .message-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+      .message-time { align-self: flex-end; }
+    }
+  </style>
+</head>
+<script src="js/messages.js"></script>
+<body>
+
+  <div class="container">
+    <main>
+      <div class="page-title">
+        <span class="material-symbols-sharp" style="font-size: 2.5rem; color: var(--brand-pink);">inbox</span>
+        <h1>Customer Messages</h1>
+      </div>
+
+      <div class="messages-container">
+        <div class="messages-header">
+          Inbox • <span style="opacity:0.9;">5 New Messages</span>
+        </div>
+
+        <div class="message-list">
+
+          <!-- UNREAD MESSAGE -->
+          <div class="message-item unread">
+            <div class="message-header">
+              <div class="sender-name">Chioma Okeke</div>
+              <div class="message-time">2 minutes ago</div>
+            </div>
+            <div class="message-subject">Delivery Update Needed</div>
+            <div class="message-preview">
+              Hello Val, please can you confirm if my order (#ORD-048) will arrive before 6pm today? It’s for my sister’s birthday...
+            </div>
+          </div>
+
+          <!-- UNREAD MESSAGE -->
+          <div class="message-item unread">
+            <div class="message-header">
+              <div class="sender-name">Tunde Balogun</div>
+              <div class="message-time">15 minutes ago</div>
+            </div>
+            <div class="message-subject">Can I customize the card message?</div>
+            <div class="message-preview">
+              Hi! Placing an order for the Pink Tulip Box. Can I write a longer message on the card? Thank you!
+            </div>
+          </div>
+
+          <!-- READ MESSAGE -->
+          <div class="message-item">
+            <div class="message-header">
+              <div class="sender-name">Aisha Yusuf</div>
+              <div class="message-time">1 hour ago</div>
+            </div>
+            <div class="message-subject">Thank you so much!</div>
+            <div class="message-preview">
+              The bouquet was absolutely stunning! My mom cried happy tears. You made her day. Will definitely order again
+            </div>
+          </div>
+
+          <!-- READ MESSAGE -->
+          <div class="message-item">
+            <div class="message-header">
+              <div class="sender-name">David Okafor</div>
+              <div class="message-time">Yesterday</div>
+            </div>
+            <div class="message-subject">Bulk order for office</div>
+            <div class="message-preview">
+              Good afternoon, we'd like to place a monthly order for 10 bouquets for our office reception. Can we discuss pricing?
+            </div>
+          </div>
+
+          <!-- READ MESSAGE -->
+          <div class="message-item">
+            <div class="message-header">
+              <div class="sender-name">Sarah Adebayo</div>
+              <div class="message-time">2 days ago</div>
+            </div>
+            <div class="message-subject">Payment successful!</div>
+            <div class="message-preview">
+              Just completed payment for order #ORD-041. Please confirm receipt. Thank you!
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

@@ -1,1 +1,100 @@
-<!--Manage Products (CRUD)
+<!--Manage Products (CRUD)!-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products • Val's Pack Admin</title>
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp&display=swap" rel="stylesheet">
+
+  <style>
+    main{padding:2rem;min-height:100vh}
+    .page-title{font-size:2rem;color:var(--text-primary);margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+    .add-btn{background:var(--brand-pink);color:white;padding:.9rem 1.8rem;border-radius:12px;text-decoration:none;font-weight:600;font-size:1rem;display:inline-flex;align-items:center;gap:.6rem;transition:all 300ms;box-shadow:0 8px 20px rgba(255,51,133,.25)}
+    .add-btn:hover{background:#ff3385;transform:translateY(-4px);box-shadow:0 12px 30px rgba(255,51,133,.35)}
+    .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2rem;margin-top:1rem}
+    .product-card{background:white;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.08);transition:all 300ms}
+    .product-card:hover{transform:translateY(-10px);box-shadow:0 20px 40px rgba(255,51,133,.18)}
+    .product-img{width:100%;height:240px;object-fit:cover;background:#f8f8f8}
+    .product-info{padding:1.4rem}
+    .product-name{font-size:1.25rem;font-weight:600;color:#222;margin-bottom:.5rem}
+    .product-price{font-size:1.6rem;font-weight:bold;color:var(--brand-pink);margin:.5rem 0}
+    .product-stock{font-size:.95rem;color:#666;margin-bottom:1rem}
+    .stock-low{color:#e67e22;font-weight:600}
+    .out-of-stock{color:#e74c3c;font-weight:600}
+    .product-actions{display:flex;gap:.8rem;margin-top:1rem}
+    .btn{flex:1;padding:.75rem;text-align:center;border-radius:10px;font-weight:600;font-size:.9rem;cursor:pointer;transition:all 300ms}
+    .btn-edit{background:#fff0f8;color:var(--brand-pink);border:2px solid var(--brand-pink)}
+    .btn-edit:hover{background:var(--brand-pink);color:white}
+    .btn-delete{background:#ffe6e6;color:#e74c3c;border:2px solid #ffe6e6}
+    .btn-delete:hover{background:#e74c3c;color:white}
+    .no-products{grid-column:1/-1;text-align:center;padding:5rem 2rem;color:#aaa;font-size:1.3rem}
+    .no-products strong{color:var(--brand-pink);font-size:1.5rem}
+    @media(max-width:768px){.page-title{font-size:1.7rem;flex-direction:column;align-items:flex-start}.add-btn{width:100%;justify-content:center}}
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <main>
+      <div class="page-title">
+        <h1>Products</h1>
+        <a href="add-product.html" class="add-btn">
+          <span class="material-symbols-sharp">add_circle</span>
+          Add New Product
+        </a>
+      </div>
+
+      <!-- REAL PRODUCTS LOAD HERE -->
+      <div class="products-grid" id="productsContainer"></div>
+    </main>
+  </div>
+
+  <script>
+    const products = JSON.parse(localStorage.getItem('valspack_products') || '[]');
+
+    function loadProducts() {
+      const container = document.getElementById('productsContainer');
+      if (!container) return;
+
+      if (products.length === 0) {
+        container.innerHTML = `<div class="no-products">
+          <p>No flowers yet, Queen</p>
+          <strong>Click "Add New Product" to start your empire</strong>
+        </div>`;
+        return;
+      }
+
+      container.innerHTML = products.map(p => `
+        <div class="product-card">
+          <img src="${p.image || 'https://via.placeholder.com/300x240/ffe6f5/ff3385?text=No+Image'}" class="product-img" alt="${p.name}">
+          <div class="product-info">
+            <div class="product-name">${p.name}</div>
+            <div class="product-price">₦${Number(p.price).toLocaleString()}</div>
+            <div class="product-stock ${p.stock <= 5 ? 'stock-low' : ''} ${p.stock == 0 ? 'out-of-stock' : ''}">
+              Stock: <strong>${p.stock == 0 ? 'Out of Stock' : p.stock + ' left'}</strong>
+            </div>
+            <div class="product-actions">
+              <a href="add-product.html?id=${p.id}" class="btn btn-edit">Edit</a>
+              <button onclick="deleteProduct(${p.id})" class="btn btn-delete">Delete</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteProduct(id) {
+      if (confirm('Delete this bouquet forever?')) {
+        const updated = products.filter(p => p.id !== id);
+        localStorage.setItem('valspack_products', JSON.stringify(updated));
+        location.reload();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadProducts);
+    window.addEventListener('focus', loadProducts);
+  </script>
+</body>
+</html>
